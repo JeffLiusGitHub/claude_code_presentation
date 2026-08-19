@@ -1,0 +1,1951 @@
+{
+  "generatedAt": "2026-08-19T03:58:32.913Z",
+  "source": "Proxyman HAR — sanitized locally",
+  "redactions": [
+    "Authorization and API keys",
+    "raw request and response bodies",
+    "email addresses and other PII",
+    "full system prompts, conversation text, tool inputs, and tool outputs"
+  ],
+  "captureSummary": {
+    "inputFiles": [
+      "anthropic-full.har",
+      "retry-localhost.har"
+    ],
+    "capturedHarEntries": 339,
+    "knownExperimentMessageFlows": 35,
+    "curatedChartRows": 18,
+    "retryStatuses": [
+      529,
+      529,
+      200
+    ],
+    "subagentFlows": 2
+  },
+  "requests": [
+    {
+      "id": "proxyman-674",
+      "label": "P1/P3/P4 · history, cache, compact · PXM_HISTORY_ALPHA_2026",
+      "source": "anthropic-full.har",
+      "requestBytes": 2457,
+      "bodyChars": 2437,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 556,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 16
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 416,
+        "other": 540
+      }
+    },
+    {
+      "id": "proxyman-697",
+      "label": "P1/P3/P4 · history, cache, compact · PXM_HISTORY_BETA_2026",
+      "source": "anthropic-full.har",
+      "requestBytes": 112196,
+      "bodyChars": 111731,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "messagesCount": 3,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 390,
+        "cacheRead": 28562,
+        "output": 371
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71654,
+        "messages": 11138,
+        "other": 547
+      }
+    },
+    {
+      "id": "proxyman-737",
+      "label": "P1/P3/P4 · history, cache, compact · PXM_COMPACT_CONTEXT_2026",
+      "source": "anthropic-full.har",
+      "requestBytes": 121185,
+      "bodyChars": 120712,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "messagesCount": 5,
+      "tokens": {
+        "input": 1496,
+        "cacheCreation": 378,
+        "cacheRead": 28952,
+        "output": 944
+      },
+      "anatomy": {
+        "system": 28370,
+        "tools": 71654,
+        "messages": 20210,
+        "other": 478
+      }
+    },
+    {
+      "id": "proxyman-782",
+      "label": "P2 · ReAct tool loop · PXM_REACT_TOOL_RESULT_2026",
+      "source": "anthropic-full.har",
+      "requestBytes": 113263,
+      "bodyChars": 112792,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "messagesCount": 5,
+      "tokens": {
+        "input": 8,
+        "cacheCreation": 349,
+        "cacheRead": 28873,
+        "output": 94
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71654,
+        "messages": 12199,
+        "other": 547
+      }
+    },
+    {
+      "id": "proxyman-797",
+      "label": "P6-A · Haiku",
+      "source": "anthropic-full.har",
+      "requestBytes": 29285,
+      "bodyChars": 29207,
+      "systemSegments": 4,
+      "toolsCount": 0,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 6389,
+        "cacheRead": 0,
+        "output": 193
+      },
+      "anatomy": {
+        "system": 27484,
+        "tools": 2,
+        "messages": 1200,
+        "other": 521
+      }
+    },
+    {
+      "id": "proxyman-813",
+      "label": "P6-B · Sonnet",
+      "source": "anthropic-full.har",
+      "requestBytes": 29277,
+      "bodyChars": 29199,
+      "systemSegments": 4,
+      "toolsCount": 0,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 2,
+        "cacheCreation": 5506,
+        "cacheRead": 3289,
+        "output": 13
+      },
+      "anatomy": {
+        "system": 27472,
+        "tools": 2,
+        "messages": 1201,
+        "other": 524
+      }
+    },
+    {
+      "id": "proxyman-833",
+      "label": "P7-A · max_tokens 4096",
+      "source": "anthropic-full.har",
+      "requestBytes": 29277,
+      "bodyChars": 29199,
+      "systemSegments": 4,
+      "toolsCount": 0,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 287,
+        "cacheRead": 6103,
+        "output": 297
+      },
+      "anatomy": {
+        "system": 27484,
+        "tools": 2,
+        "messages": 1194,
+        "other": 519
+      }
+    },
+    {
+      "id": "proxyman-848",
+      "label": "P7-B · max_tokens 8192",
+      "source": "anthropic-full.har",
+      "requestBytes": 29277,
+      "bodyChars": 29199,
+      "systemSegments": 4,
+      "toolsCount": 0,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 287,
+        "cacheRead": 6103,
+        "output": 300
+      },
+      "anatomy": {
+        "system": 27484,
+        "tools": 2,
+        "messages": 1194,
+        "other": 519
+      }
+    },
+    {
+      "id": "proxyman-871",
+      "label": "P8 · parent delegates work",
+      "source": "anthropic-full.har",
+      "requestBytes": 109938,
+      "bodyChars": 109473,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "messagesCount": 2,
+      "tokens": {
+        "input": 2,
+        "cacheCreation": 8591,
+        "cacheRead": 29644,
+        "output": 318
+      },
+      "anatomy": {
+        "system": 28338,
+        "tools": 71652,
+        "messages": 8959,
+        "other": 524
+      }
+    },
+    {
+      "id": "proxyman-909",
+      "label": "P8 · subagent starts with scoped brief",
+      "source": "anthropic-full.har",
+      "requestBytes": 6663,
+      "bodyChars": 6651,
+      "systemSegments": 3,
+      "toolsCount": 1,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 2107,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 136
+      },
+      "anatomy": {
+        "system": 2182,
+        "tools": 2617,
+        "messages": 1331,
+        "other": 521
+      }
+    },
+    {
+      "id": "proxyman-915",
+      "label": "P8 · subagent returns seed marker",
+      "source": "anthropic-full.har",
+      "requestBytes": 7848,
+      "bodyChars": 7836,
+      "systemSegments": 3,
+      "toolsCount": 1,
+      "messagesCount": 3,
+      "tokens": {
+        "input": 2282,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 76
+      },
+      "anatomy": {
+        "system": 2224,
+        "tools": 2617,
+        "messages": 2448,
+        "other": 547
+      }
+    },
+    {
+      "id": "proxyman-916",
+      "label": "P8 · parent receives subagent result",
+      "source": "anthropic-full.har",
+      "requestBytes": 111656,
+      "bodyChars": 111191,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "messagesCount": 4,
+      "tokens": {
+        "input": 2,
+        "cacheCreation": 435,
+        "cacheRead": 38235,
+        "output": 74
+      },
+      "anatomy": {
+        "system": 28380,
+        "tools": 71652,
+        "messages": 10609,
+        "other": 550
+      }
+    },
+    {
+      "id": "proxyman-943",
+      "label": "P9-A · memory · PXM_MEMORY_CONTEXT_2026",
+      "source": "anthropic-full.har",
+      "requestBytes": 110035,
+      "bodyChars": 109570,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 6672,
+        "cacheRead": 21936,
+        "output": 99
+      },
+      "anatomy": {
+        "system": 28330,
+        "tools": 71654,
+        "messages": 9065,
+        "other": 521
+      }
+    },
+    {
+      "id": "proxyman-1037",
+      "label": "P9-B · skill · PXM_SKILL_CONTEXT_2026",
+      "source": "anthropic-full.har",
+      "requestBytes": 110020,
+      "bodyChars": 109555,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 9,
+        "cacheCreation": 2691,
+        "cacheRead": 25915,
+        "output": 162
+      },
+      "anatomy": {
+        "system": 28350,
+        "tools": 71654,
+        "messages": 9030,
+        "other": 521
+      }
+    },
+    {
+      "id": "proxyman-1075",
+      "label": "P9-C · MCP · PXM_MCP_CONTEXT_2026",
+      "source": "anthropic-full.har",
+      "requestBytes": 115756,
+      "bodyChars": 115285,
+      "systemSegments": 4,
+      "toolsCount": 16,
+      "messagesCount": 9,
+      "tokens": {
+        "input": 8,
+        "cacheCreation": 128,
+        "cacheRead": 29397,
+        "output": 62
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71887,
+        "messages": 14459,
+        "other": 547
+      }
+    },
+    {
+      "id": "proxyman-1090",
+      "label": "P5 · retry attempt 1 · HTTP 529",
+      "source": "retry-localhost.har",
+      "requestBytes": 2313,
+      "bodyChars": 2293,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 0,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 0
+      },
+      "anatomy": {
+        "system": 1468,
+        "tools": 2,
+        "messages": 319,
+        "other": 504
+      }
+    },
+    {
+      "id": "proxyman-1091",
+      "label": "P5 · retry attempt 2 · HTTP 529",
+      "source": "retry-localhost.har",
+      "requestBytes": 1277,
+      "bodyChars": 1277,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 0,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 0
+      },
+      "anatomy": {
+        "system": 333,
+        "tools": 2,
+        "messages": 500,
+        "other": 442
+      }
+    },
+    {
+      "id": "proxyman-1092",
+      "label": "P5 · retry attempt 3 · HTTP 200",
+      "source": "retry-localhost.har",
+      "requestBytes": 1277,
+      "bodyChars": 1277,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "messagesCount": 1,
+      "tokens": {
+        "input": 1,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 1
+      },
+      "anatomy": {
+        "system": 333,
+        "tools": 2,
+        "messages": 500,
+        "other": 442
+      }
+    }
+  ],
+  "flows": [
+    {
+      "flowId": "674",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:38:04+10:00",
+      "status": 200,
+      "sessionId": "b1111111-1111-4111-8111-111111111111",
+      "sessionLabel": "P1/P3/P4 · history, cache, compact",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2457,
+      "bodyChars": 2437,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 556,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 16
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 416,
+        "other": 540
+      },
+      "markers": [
+        "PXM_HISTORY_ALPHA_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "681",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:38:04+10:00",
+      "status": 200,
+      "sessionId": "b1111111-1111-4111-8111-111111111111",
+      "sessionLabel": "P1/P3/P4 · history, cache, compact",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 109851,
+      "bodyChars": 109386,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 6626,
+        "cacheRead": 21936,
+        "output": 344
+      },
+      "anatomy": {
+        "system": 28350,
+        "tools": 71654,
+        "messages": 8861,
+        "other": 521
+      },
+      "markers": [
+        "PXM_HISTORY_ALPHA_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "697",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:38:21+10:00",
+      "status": 200,
+      "sessionId": "b1111111-1111-4111-8111-111111111111",
+      "sessionLabel": "P1/P3/P4 · history, cache, compact",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 112196,
+      "bodyChars": 111731,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 3,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 390,
+        "cacheRead": 28562,
+        "output": 371
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71654,
+        "messages": 11138,
+        "other": 547
+      },
+      "markers": [
+        "PXM_HISTORY_ALPHA_2026",
+        "PXM_HISTORY_BETA_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "716",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:38:36+10:00",
+      "status": 200,
+      "sessionId": "b1111111-1111-4111-8111-111111111111",
+      "sessionLabel": "P1/P3/P4 · history, cache, compact",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 114652,
+      "bodyChars": 114187,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 5,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 406,
+        "cacheRead": 28952,
+        "output": 283
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71654,
+        "messages": 13594,
+        "other": 547
+      },
+      "markers": [
+        "PXM_HISTORY_ALPHA_2026",
+        "PXM_HISTORY_BETA_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "737",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:38:57+10:00",
+      "status": 200,
+      "sessionId": "b1111111-1111-4111-8111-111111111111",
+      "sessionLabel": "P1/P3/P4 · history, cache, compact",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 121185,
+      "bodyChars": 120712,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 5,
+      "tokens": {
+        "input": 1496,
+        "cacheCreation": 378,
+        "cacheRead": 28952,
+        "output": 944
+      },
+      "anatomy": {
+        "system": 28370,
+        "tools": 71654,
+        "messages": 20210,
+        "other": 478
+      },
+      "markers": [
+        "PXM_HISTORY_ALPHA_2026",
+        "PXM_HISTORY_BETA_2026",
+        "PXM_COMPACT_CONTEXT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "756",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:39:18+10:00",
+      "status": 200,
+      "sessionId": "b1111111-1111-4111-8111-111111111111",
+      "sessionLabel": "P1/P3/P4 · history, cache, compact",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 114096,
+      "bodyChars": 113629,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 5,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 3388,
+        "cacheRead": 25915,
+        "output": 354
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71654,
+        "messages": 13036,
+        "other": 547
+      },
+      "markers": [
+        "PXM_HISTORY_ALPHA_2026",
+        "PXM_HISTORY_BETA_2026",
+        "PXM_COMPACT_CONTEXT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "774",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:39:35+10:00",
+      "status": 200,
+      "sessionId": "b2222222-2222-4222-8222-222222222222",
+      "sessionLabel": "P2 · ReAct tool loop",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2450,
+      "bodyChars": 2430,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 563,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 19
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 409,
+        "other": 540
+      },
+      "markers": [
+        "PXM_REACT_TOOL_RESULT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "775",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:39:35+10:00",
+      "status": 200,
+      "sessionId": "b2222222-2222-4222-8222-222222222222",
+      "sessionLabel": "P2 · ReAct tool loop",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 109844,
+      "bodyChars": 109379,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 2654,
+        "cacheRead": 25915,
+        "output": 238
+      },
+      "anatomy": {
+        "system": 28350,
+        "tools": 71654,
+        "messages": 8854,
+        "other": 521
+      },
+      "markers": [
+        "PXM_REACT_TOOL_RESULT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "781",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:39:37+10:00",
+      "status": 200,
+      "sessionId": "b2222222-2222-4222-8222-222222222222",
+      "sessionLabel": "P2 · ReAct tool loop",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 111535,
+      "bodyChars": 111068,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 3,
+      "tokens": {
+        "input": 8,
+        "cacheCreation": 304,
+        "cacheRead": 28569,
+        "output": 102
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71654,
+        "messages": 10475,
+        "other": 547
+      },
+      "markers": [
+        "PXM_REACT_TOOL_RESULT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "782",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:39:39+10:00",
+      "status": 200,
+      "sessionId": "b2222222-2222-4222-8222-222222222222",
+      "sessionLabel": "P2 · ReAct tool loop",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 113263,
+      "bodyChars": 112792,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 5,
+      "tokens": {
+        "input": 8,
+        "cacheCreation": 349,
+        "cacheRead": 28873,
+        "output": 94
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71654,
+        "messages": 12199,
+        "other": 547
+      },
+      "markers": [
+        "PXM_REACT_TOOL_RESULT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "790",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:39:53+10:00",
+      "status": 200,
+      "sessionId": "b6666666-6666-4666-8666-666666666661",
+      "sessionLabel": "P6-A · Haiku",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2377,
+      "bodyChars": 2357,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 538,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 16
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 336,
+        "other": 540
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "797",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:39:53+10:00",
+      "status": 200,
+      "sessionId": "b6666666-6666-4666-8666-666666666661",
+      "sessionLabel": "P6-A · Haiku",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 29285,
+      "bodyChars": 29207,
+      "systemSegments": 4,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 6389,
+        "cacheRead": 0,
+        "output": 193
+      },
+      "anatomy": {
+        "system": 27484,
+        "tools": 2,
+        "messages": 1200,
+        "other": 521
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "812",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:39:59+10:00",
+      "status": 200,
+      "sessionId": "b6666666-6666-4666-8666-666666666662",
+      "sessionLabel": "P6-B · Sonnet",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2378,
+      "bodyChars": 2358,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 538,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 17
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 337,
+        "other": 540
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "813",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:39:59+10:00",
+      "status": 200,
+      "sessionId": "b6666666-6666-4666-8666-666666666662",
+      "sessionLabel": "P6-B · Sonnet",
+      "model": "claude-sonnet-5",
+      "maxTokens": 64000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 29277,
+      "bodyChars": 29199,
+      "systemSegments": 4,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 2,
+        "cacheCreation": 5506,
+        "cacheRead": 3289,
+        "output": 13
+      },
+      "anatomy": {
+        "system": 27472,
+        "tools": 2,
+        "messages": 1201,
+        "other": 524
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "826",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:40:13+10:00",
+      "status": 200,
+      "sessionId": "b7777777-7777-4777-8777-777777777741",
+      "sessionLabel": "P7-A · max_tokens 4096",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 4096,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2370,
+      "bodyChars": 2350,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 539,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 17
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 330,
+        "other": 539
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "833",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:40:13+10:00",
+      "status": 200,
+      "sessionId": "b7777777-7777-4777-8777-777777777741",
+      "sessionLabel": "P7-A · max_tokens 4096",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 4096,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 29277,
+      "bodyChars": 29199,
+      "systemSegments": 4,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 287,
+        "cacheRead": 6103,
+        "output": 297
+      },
+      "anatomy": {
+        "system": 27484,
+        "tools": 2,
+        "messages": 1194,
+        "other": 519
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "847",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:40:21+10:00",
+      "status": 200,
+      "sessionId": "b7777777-7777-4777-8777-777777777782",
+      "sessionLabel": "P7-B · max_tokens 8192",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 8192,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2370,
+      "bodyChars": 2350,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 539,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 16
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 330,
+        "other": 539
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "848",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:40:21+10:00",
+      "status": 200,
+      "sessionId": "b7777777-7777-4777-8777-777777777782",
+      "sessionLabel": "P7-B · max_tokens 8192",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 8192,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 29277,
+      "bodyChars": 29199,
+      "systemSegments": 4,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 287,
+        "cacheRead": 6103,
+        "output": 300
+      },
+      "anatomy": {
+        "system": 27484,
+        "tools": 2,
+        "messages": 1194,
+        "other": 519
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "864",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:40:47+10:00",
+      "status": 200,
+      "sessionId": "b8888888-8888-4888-8888-888888888888",
+      "sessionLabel": "P8 · parent and subagent",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2484,
+      "bodyChars": 2464,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 570,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 15
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 443,
+        "other": 540
+      },
+      "markers": [
+        "PXM_PARENT_ONLY_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "871",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:40:47+10:00",
+      "status": 200,
+      "sessionId": "b8888888-8888-4888-8888-888888888888",
+      "sessionLabel": "P8 · parent and subagent",
+      "model": "claude-sonnet-5",
+      "maxTokens": 64000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 109938,
+      "bodyChars": 109473,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 2,
+      "tokens": {
+        "input": 2,
+        "cacheCreation": 8591,
+        "cacheRead": 29644,
+        "output": 318
+      },
+      "anatomy": {
+        "system": 28338,
+        "tools": 71652,
+        "messages": 8959,
+        "other": 524
+      },
+      "markers": [
+        "PXM_PARENT_ONLY_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "909",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:40:55+10:00",
+      "status": 200,
+      "sessionId": "b8888888-8888-4888-8888-888888888888",
+      "sessionLabel": "P8 · parent and subagent",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 6663,
+      "bodyChars": 6651,
+      "systemSegments": 3,
+      "toolsCount": 1,
+      "toolNames": [
+        "Read"
+      ],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 2107,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 136
+      },
+      "anatomy": {
+        "system": 2182,
+        "tools": 2617,
+        "messages": 1331,
+        "other": 521
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": true,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "915",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:40:57+10:00",
+      "status": 200,
+      "sessionId": "b8888888-8888-4888-8888-888888888888",
+      "sessionLabel": "P8 · parent and subagent",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 7848,
+      "bodyChars": 7836,
+      "systemSegments": 3,
+      "toolsCount": 1,
+      "toolNames": [
+        "Read"
+      ],
+      "messagesCount": 3,
+      "tokens": {
+        "input": 2282,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 76
+      },
+      "anatomy": {
+        "system": 2224,
+        "tools": 2617,
+        "messages": 2448,
+        "other": 547
+      },
+      "markers": [
+        "PXM_SEED_MARKER_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": true,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "916",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:40:59+10:00",
+      "status": 200,
+      "sessionId": "b8888888-8888-4888-8888-888888888888",
+      "sessionLabel": "P8 · parent and subagent",
+      "model": "claude-sonnet-5",
+      "maxTokens": 64000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 111656,
+      "bodyChars": 111191,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 4,
+      "tokens": {
+        "input": 2,
+        "cacheCreation": 435,
+        "cacheRead": 38235,
+        "output": 74
+      },
+      "anatomy": {
+        "system": 28380,
+        "tools": 71652,
+        "messages": 10609,
+        "other": 550
+      },
+      "markers": [
+        "PXM_PARENT_ONLY_2026",
+        "PXM_SEED_MARKER_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "935",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:41:16+10:00",
+      "status": 200,
+      "sessionId": "b9999999-9999-4999-8999-999999999991",
+      "sessionLabel": "P9-A · memory",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2387,
+      "bodyChars": 2367,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 537,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 17
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 346,
+        "other": 540
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "943",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:41:16+10:00",
+      "status": 200,
+      "sessionId": "b9999999-9999-4999-8999-999999999991",
+      "sessionLabel": "P9-A · memory",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 110035,
+      "bodyChars": 109570,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 6672,
+        "cacheRead": 21936,
+        "output": 99
+      },
+      "anatomy": {
+        "system": 28330,
+        "tools": 71654,
+        "messages": 9065,
+        "other": 521
+      },
+      "markers": [
+        "PXM_MEMORY_CONTEXT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "1037",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:41:27+10:00",
+      "status": 200,
+      "sessionId": "b9999999-9999-4999-8999-999999999992",
+      "sessionLabel": "P9-B · skill",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 110020,
+      "bodyChars": 109555,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 9,
+        "cacheCreation": 2691,
+        "cacheRead": 25915,
+        "output": 162
+      },
+      "anatomy": {
+        "system": 28350,
+        "tools": 71654,
+        "messages": 9030,
+        "other": 521
+      },
+      "markers": [
+        "PXM_SKILL_CONTEXT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "1052",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:41:42+10:00",
+      "status": 200,
+      "sessionId": "b9999999-9999-4999-8999-999999999993",
+      "sessionLabel": "P9-C · MCP",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2412,
+      "bodyChars": 2392,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 548,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 17
+      },
+      "anatomy": {
+        "system": 1479,
+        "tools": 2,
+        "messages": 371,
+        "other": 540
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "1058",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:41:43+10:00",
+      "status": 200,
+      "sessionId": "b9999999-9999-4999-8999-999999999993",
+      "sessionLabel": "P9-C · MCP",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 110278,
+      "bodyChars": 109809,
+      "systemSegments": 4,
+      "toolsCount": 15,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "DeferredToolPlaceholder",
+        "Write"
+      ],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 2739,
+        "cacheRead": 25915,
+        "output": 222
+      },
+      "anatomy": {
+        "system": 28350,
+        "tools": 71654,
+        "messages": 9284,
+        "other": 521
+      },
+      "markers": [],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "1060",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:41:48+10:00",
+      "status": 200,
+      "sessionId": "b9999999-9999-4999-8999-999999999993",
+      "sessionLabel": "P9-C · MCP",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 112148,
+      "bodyChars": 111679,
+      "systemSegments": 4,
+      "toolsCount": 16,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "Write",
+        "DeferredToolPlaceholder",
+        "mcp__proxyman-traffic-test__echo_proxyman_marker"
+      ],
+      "messagesCount": 3,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 325,
+        "cacheRead": 28654,
+        "output": 99
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71887,
+        "messages": 10853,
+        "other": 547
+      },
+      "markers": [
+        "PXM_MCP_CONTEXT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "1061",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:41:50+10:00",
+      "status": 200,
+      "sessionId": "b9999999-9999-4999-8999-999999999993",
+      "sessionLabel": "P9-C · MCP",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 113800,
+      "bodyChars": 113329,
+      "systemSegments": 4,
+      "toolsCount": 16,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "Write",
+        "DeferredToolPlaceholder",
+        "mcp__proxyman-traffic-test__echo_proxyman_marker"
+      ],
+      "messagesCount": 5,
+      "tokens": {
+        "input": 8,
+        "cacheCreation": 307,
+        "cacheRead": 28979,
+        "output": 84
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71887,
+        "messages": 12503,
+        "other": 547
+      },
+      "markers": [
+        "PXM_MCP_CONTEXT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "1073",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:42:04+10:00",
+      "status": 200,
+      "sessionId": "b9999999-9999-4999-8999-999999999993",
+      "sessionLabel": "P9-C · MCP",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 114813,
+      "bodyChars": 114342,
+      "systemSegments": 4,
+      "toolsCount": 16,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "Write",
+        "DeferredToolPlaceholder",
+        "mcp__proxyman-traffic-test__echo_proxyman_marker"
+      ],
+      "messagesCount": 7,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 111,
+        "cacheRead": 29286,
+        "output": 95
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71887,
+        "messages": 13516,
+        "other": 547
+      },
+      "markers": [
+        "PXM_MCP_CONTEXT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "1075",
+      "source": "anthropic-full.har",
+      "timestamp": "2026-08-19T01:42:06+10:00",
+      "status": 200,
+      "sessionId": "b9999999-9999-4999-8999-999999999993",
+      "sessionLabel": "P9-C · MCP",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 115756,
+      "bodyChars": 115285,
+      "systemSegments": 4,
+      "toolsCount": 16,
+      "toolNames": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "PowerShell",
+        "Read",
+        "ReportFindings",
+        "ScheduleWakeup",
+        "ShareOnboardingGuide",
+        "Skill",
+        "ToolSearch",
+        "Workflow",
+        "Write",
+        "DeferredToolPlaceholder",
+        "mcp__proxyman-traffic-test__echo_proxyman_marker"
+      ],
+      "messagesCount": 9,
+      "tokens": {
+        "input": 8,
+        "cacheCreation": 128,
+        "cacheRead": 29397,
+        "output": 62
+      },
+      "anatomy": {
+        "system": 28392,
+        "tools": 71887,
+        "messages": 14459,
+        "other": 547
+      },
+      "markers": [
+        "PXM_MCP_CONTEXT_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false
+    },
+    {
+      "flowId": "1090",
+      "source": "retry-localhost.har",
+      "timestamp": "2026-08-19T01:42:43+10:00",
+      "status": 529,
+      "sessionId": "b5555555-5555-4555-8555-555555555555",
+      "sessionLabel": "P5 · retry",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 2313,
+      "bodyChars": 2293,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 0,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 0
+      },
+      "anatomy": {
+        "system": 1468,
+        "tools": 2,
+        "messages": 319,
+        "other": 504
+      },
+      "markers": [
+        "PXM_RETRY_SUCCESS_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false,
+      "retryAttempt": 1
+    },
+    {
+      "flowId": "1091",
+      "source": "retry-localhost.har",
+      "timestamp": "2026-08-19T01:42:43+10:00",
+      "status": 529,
+      "sessionId": "b5555555-5555-4555-8555-555555555555",
+      "sessionLabel": "P5 · retry",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 1277,
+      "bodyChars": 1277,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 0,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 0
+      },
+      "anatomy": {
+        "system": 333,
+        "tools": 2,
+        "messages": 500,
+        "other": 442
+      },
+      "markers": [
+        "PXM_RETRY_SUCCESS_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false,
+      "retryAttempt": 2
+    },
+    {
+      "flowId": "1092",
+      "source": "retry-localhost.har",
+      "timestamp": "2026-08-19T01:42:44+10:00",
+      "status": 200,
+      "sessionId": "b5555555-5555-4555-8555-555555555555",
+      "sessionLabel": "P5 · retry",
+      "model": "claude-haiku-4-5-20251001",
+      "maxTokens": 32000,
+      "stream": true,
+      "retryCount": 0,
+      "requestBytes": 1277,
+      "bodyChars": 1277,
+      "systemSegments": 3,
+      "toolsCount": 0,
+      "toolNames": [],
+      "messagesCount": 1,
+      "tokens": {
+        "input": 1,
+        "cacheCreation": 0,
+        "cacheRead": 0,
+        "output": 1
+      },
+      "anatomy": {
+        "system": 333,
+        "tools": 2,
+        "messages": 500,
+        "other": 442
+      },
+      "markers": [
+        "PXM_RETRY_SUCCESS_2026"
+      ],
+      "hasSessionHeader": true,
+      "hasAgentHeader": false,
+      "hasParentAgentHeader": false,
+      "retryAttempt": 3
+    }
+  ]
+}

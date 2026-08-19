@@ -1,0 +1,49 @@
+{
+  "capturedAt": "2026-08-19T13:45:11+10:00",
+  "tool": "Proxyman",
+  "scope": "Claude Desktop Code local session",
+  "sanitized": true,
+  "note": "No headers, credentials, cookies, organization identifiers, raw prompt bodies, or file contents are included. Output values are the message_start usage snapshot visible in the capture.",
+  "requests": [
+    {
+      "label": "963 · Baseline 主请求",
+      "requestBytes": 166000,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 43578,
+        "cacheRead": 0,
+        "output": 7
+      }
+    },
+    {
+      "label": "1133 · 首次 tool_use",
+      "requestBytes": 168000,
+      "tokens": {
+        "input": 10,
+        "cacheCreation": 257,
+        "cacheRead": 43578,
+        "output": 7
+      }
+    },
+    {
+      "label": "1135 · tool_result 续跑",
+      "requestBytes": 170000,
+      "tokens": {
+        "input": 8,
+        "cacheCreation": 290,
+        "cacheRead": 43835,
+        "output": 2
+      }
+    },
+    {
+      "label": "1139 · UI suggestion",
+      "requestBytes": 172000,
+      "tokens": {
+        "input": 350,
+        "cacheCreation": 54,
+        "cacheRead": 44125,
+        "output": 4
+      }
+    }
+  ]
+}

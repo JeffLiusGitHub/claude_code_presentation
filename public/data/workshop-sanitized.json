@@ -1,0 +1,68 @@
+{
+  "about": "Sanitized Claude Desktop workshop measurements. No prompt, system, tool schema, key, or PII content is included.",
+  "capturedAt": "2026-08-18T08:18:54+10:00",
+  "inferenceRoute": "IE Azure Gateway",
+  "observationRoute": "OTLP to 127.0.0.1:8787",
+  "requests": [
+    {
+      "label": "01 · 极简 Prompt",
+      "bodyChars": 57365,
+      "requestBytes": 58528,
+      "systemSegments": 3,
+      "toolsCount": 27,
+      "messagesCount": 2,
+      "tokens": {
+        "input": 374,
+        "cacheCreation": 0,
+        "cacheRead": 19673,
+        "output": 4
+      },
+      "anatomy": {
+        "system": 20384,
+        "tools": 34834,
+        "messages": 1677,
+        "other": 470
+      }
+    },
+    {
+      "label": "02 · 同会话追问",
+      "bodyChars": 57543,
+      "requestBytes": 59656,
+      "systemSegments": 3,
+      "toolsCount": 27,
+      "messagesCount": 4,
+      "tokens": {
+        "input": 2,
+        "cacheCreation": 397,
+        "cacheRead": 19673,
+        "output": 12
+      },
+      "anatomy": {
+        "system": 20384,
+        "tools": 34834,
+        "messages": 1855,
+        "other": 470
+      }
+    },
+    {
+      "label": "03 · “双子代理”请求",
+      "bodyChars": 57586,
+      "requestBytes": 58749,
+      "systemSegments": 3,
+      "toolsCount": 27,
+      "messagesCount": 2,
+      "tokens": {
+        "input": 374,
+        "cacheCreation": 256,
+        "cacheRead": 19490,
+        "output": 315
+      },
+      "anatomy": {
+        "system": 20384,
+        "tools": 34834,
+        "messages": 1898,
+        "other": 470
+      }
+    }
+  ]
+}
