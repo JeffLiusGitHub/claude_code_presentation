@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import PageNav from "../page-nav";
 import PrimaryNav from "../primary-nav";
 
 const title = "Proxyman Setup · Capture the Claude Agent Loop";
@@ -64,18 +63,6 @@ export default function ProxymanGuide() {
   return (
     <main className="pmg-page">
       <PrimaryNav />
-      <PageNav
-        label="PROXYMAN"
-        detail="SETUP & CAPTURE GUIDE"
-        ariaLabel="Proxyman guide navigation"
-        items={[
-          { href: "#install", label: "Install" },
-          { href: "#configure", label: "Configure" },
-          { href: "#task", label: "Run the task" },
-          { href: "#trace", label: "Read the trace" },
-          { href: "/field-validation", label: "Workshop", cta: true },
-        ]}
-      />
 
       <header className="pmg-hero" id="top">
         <div className="pmg-hero-copy">

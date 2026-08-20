@@ -186,11 +186,11 @@ test("server-renders the local-only Request Token Explorer", async () => {
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/);
 });
 
-test("all non-presentation pages share the homepage navigation and keep their own secondary navigation", async () => {
+test("all non-presentation pages share the homepage navigation and keep secondary navigation only where needed", async () => {
   const routes = [
     { pathname: "/", secondary: null },
     { pathname: "/field-validation", secondary: "Workshop navigation" },
-    { pathname: "/proxyman-guide", secondary: "Proxyman guide navigation" },
+    { pathname: "/proxyman-guide", secondary: null },
     { pathname: "/request-analyzer", secondary: "Request Analyzer navigation" },
     { pathname: "/workshop", secondary: "Context Lab navigation" },
   ];
@@ -205,6 +205,9 @@ test("all non-presentation pages share the homepage navigation and keep their ow
     if (route.secondary) {
       const secondaryIndex = html.indexOf(`aria-label="${route.secondary}"`);
       assert.ok(secondaryIndex > primaryIndex, `${route.pathname} should render its secondary navigation after the primary navigation`);
+    }
+    if (route.pathname === "/proxyman-guide") {
+      assert.doesNotMatch(html, /aria-label="Proxyman guide navigation"/);
     }
   }
 });
