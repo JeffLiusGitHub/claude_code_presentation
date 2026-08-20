@@ -8,8 +8,8 @@ export default function PrimaryNav({ brandHref = "/#top" }: PrimaryNavProps) {
   return (
     <nav className={`${styles.nav} ${styles.primaryNav}`} aria-label="Primary navigation">
       <a className={styles.brand} href={brandHref} aria-label="Back to homepage">
-        <span>CLAUDE / CONTEXT</span>
-        <b>LEARNING LAB</b>
+        <span>INSIDE CLAUDE CODE</span>
+        <b>REQUESTS, CONTEXT &amp; AGENT LOOPS</b>
       </a>
       <div className={styles.navLinks}>
         <a href="/proxyman-guide">Proxyman How-to</a>

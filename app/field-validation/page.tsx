@@ -43,7 +43,6 @@ export default function WorkshopPage() {
           { href: "#tasks", label: "Tasks" },
           { href: "#timing", label: "Timing" },
           { href: "#before-start", label: "Before you start" },
-          { href: "/presentation", label: "Request Anatomy", cta: true },
         ]}
       />
 
