@@ -40,6 +40,125 @@ test("uses the deterministic CJK and UTF-8 estimator", () => {
   assert.equal(estimateTokens("中文abcd🙂"), 4);
 });
 
+test("analyzes Markdown files as sectioned local token estimates", () => {
+  const markdown = `Front matter\n\n# Token guide\n中文正文 and text.\n\n## Details\nMore content.`;
+  const bundle = analyzeInput(markdown, "token-guide.md");
+  const request = bundle.requests[0];
+
+  assert.equal(bundle.source.format, "markdown");
+  assert.equal(request.mode, "document");
+  assert.equal(request.label, "Token guide · Markdown");
+  assert.equal(request.usage, undefined);
+  assert.equal(category(request, "document")?.label, "Other Markdown");
+  assert.equal(category(request, "document")?.nodes.length, 3);
+  assert.deepEqual(category(request, "document")?.nodes.map((node) => node.path), [
+    "$.markdown.introduction",
+    "$.markdown.sections[0]",
+    "$.markdown.sections[1]",
+  ]);
+  assert.ok((category(request, "document")?.amount ?? 0) > 0);
+  assert.match(request.warnings[0], /no official Usage/i);
+});
+
+test("auto-detects pasted Markdown and classifies supported semantic headings", () => {
+  const markdown = `# Request Anatomy
+Overview.
+
+## System Prompt
+Core instructions.
+
+### Guardrails
+Inherited system instructions.
+
+## Tool Definitions
+Tool schemas.
+
+## Memory
+Explicit memory section.
+
+## Current User
+The latest user request.
+
+## Notes about MEMORY.md
+This mention is not an explicit Memory heading.`;
+  const request = analyzeInput(markdown, "pasted-content.txt", { format: "auto" }).requests[0];
+
+  assert.equal(request.mode, "document");
+  assert.equal(request.metadata.format, "markdown");
+  assert.equal(category(request, "system")?.nodes.length, 2);
+  assert.equal(category(request, "toolDefinitions")?.nodes.length, 1);
+  assert.equal(category(request, "memory")?.nodes.length, 1);
+  assert.equal(category(request, "currentUser")?.nodes.length, 1);
+  assert.deepEqual(category(request, "document")?.nodes.map((node) => node.label), ["Request Anatomy", "Notes about MEMORY.md"]);
+  assert.match(category(request, "system")?.nodes[1].note ?? "", /Inherited from the parent Markdown heading/);
+});
+
+test("handles .markdown Setext headings and ignores headings inside fenced code", () => {
+  const markdown = `System Prompt
+=============
+Follow the rules.
+
+\`\`\`markdown
+# Tool Calls
+This is an example, not request anatomy.
+\`\`\`
+
+Available Tools
+---------------
+Read and Search.`;
+  const request = analyzeInput(markdown, "anatomy.markdown").requests[0];
+
+  assert.ok(category(request, "system"));
+  assert.ok(category(request, "toolDefinitions"));
+  assert.equal(category(request, "toolCalls"), undefined);
+});
+
+test("supports exact Chinese semantic headings while keeping front matter unattributed", () => {
+  const markdown = `---
+title: Local analysis
+---
+# 系统提示词
+遵循明确规则。
+
+## 工具调用
+调用 Read。`;
+  const request = analyzeInput(markdown, "localized.txt").requests[0];
+
+  assert.ok(category(request, "system"));
+  assert.ok(category(request, "toolCalls"));
+  assert.deepEqual(category(request, "document")?.nodes.map((node) => node.label), ["Document introduction"]);
+});
+
+test("supports explicit Markdown mode for headingless text and strict Request mode", () => {
+  const headingless = "A plain Markdown note with **emphasis**, but no headings.";
+  const markdownRequest = analyzeInput(headingless, "pasted-content.txt", { format: "markdown" }).requests[0];
+  assert.equal(markdownRequest.mode, "document");
+  assert.equal(category(markdownRequest, "document")?.nodes.length, 1);
+
+  assert.throws(
+    () => analyzeInput("# System Prompt\nRules", "pasted-content.txt", { format: "request" }),
+    (error) => error instanceof AnalysisError && error.code === "INVALID_JSON",
+  );
+});
+
+test("routes JSON, JSONL, HAR, LOG, TXT, MD, and MARKDOWN inputs without cross-format false positives", () => {
+  const requestWithMarkdownText = minimalRequest({ system: "# System Prompt\nThis remains JSON request content." });
+  assert.equal(analyzeInput(JSON.stringify(requestWithMarkdownText), "request.json").requests[0].mode, "full");
+  assert.equal(analyzeInput(JSON.stringify(requestWithMarkdownText), "traffic.md").requests[0].mode, "full");
+  assert.equal(analyzeInput(JSON.stringify(requestWithMarkdownText), "traffic.md").source.format, "json");
+
+  const jsonl = `${JSON.stringify(minimalRequest())}\n${JSON.stringify(minimalRequest({ model: "claude-second" }))}`;
+  assert.equal(analyzeInput(jsonl, "requests.jsonl").requests.length, 2);
+
+  const log = "input_tokens: 12\ncache_read_input_tokens: 34\noutput_tokens: 5";
+  assert.equal(analyzeInput(log, "usage.log").requests[0].mode, "usage-only");
+
+  const listMarkdown = "- first item\n- second item";
+  assert.equal(analyzeInput(listMarkdown, "notes.txt").requests[0].mode, "document");
+  assert.equal(analyzeInput("No headings here", "notes.md").requests[0].mode, "document");
+  assert.equal(analyzeInput("No headings here", "notes.markdown").requests[0].mode, "document");
+});
+
 test("only accepts strict Anthropic request bodies", () => {
   assert.equal(isAnthropicRequestBody(minimalRequest()), true);
   assert.equal(isAnthropicRequestBody({ anatomy: { system: 100 }, messages: 12 }), false);
@@ -80,7 +199,7 @@ test("does not infer Memory from file-name mentions without a deterministic boun
   const request = analyzeInput(JSON.stringify(body), "memory-marker.json").requests[0];
 
   assert.equal(category(request, "memory"), undefined);
-  assert.match(category(request, "system")?.nodes[0].note ?? "", /仍归入 System/);
+  assert.match(category(request, "system")?.nodes[0].note ?? "", /remains in System/);
 });
 
 test("separates explicit Memory paths, sources, and bounded tags", () => {
@@ -151,7 +270,7 @@ test("keeps valid JSONL records and warns about damaged lines", () => {
 
   assert.equal(bundle.requests.length, 1);
   assert.equal(bundle.source.format, "jsonl");
-  assert.match(bundle.warnings[0], /1 行无法解析/);
+  assert.match(bundle.warnings[0], /1 JSONL line could not be parsed/);
 });
 
 test("reports distinct empty, invalid, missing, depth, size, and request-count errors", () => {

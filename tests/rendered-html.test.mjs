@@ -167,6 +167,8 @@ test("server-renders the standalone Proxyman setup guide", async () => {
   assert.match(html, /github\.com\/ProxymanApp\/proxyman-windows-linux\/releases\/tag\/3\.17\.0/);
   assert.match(html, /Give Claude an observable job/);
   assert.match(html, /Five signals mean the capture worked/);
+  assert.match(html, /href="\/field-validation"[^>]*>Enter the Workshop/);
+  assert.doesNotMatch(html, /Open the presentation/);
   assert.doesNotMatch(html, /og\.png/);
 });
 
@@ -177,20 +179,57 @@ test("server-renders the local-only Request Token Explorer", async () => {
   const html = await response.text();
   assert.match(html, /Request Token Explorer/);
   assert.match(html, /LOCAL ONLY/);
-  assert.match(html, /粘贴实际 Request/);
+  assert.match(html, /Paste \/ upload data/);
   assert.match(html, /System Prompt/);
   assert.match(html, /Tool Definitions/);
-  assert.match(html, /官方新增 Input/);
+  assert.match(html, /Official new input/);
+  assert.match(html, /Narrow graph panel/);
   assert.match(html, /aria-label="Primary navigation"/);
   assert.match(html, /aria-label="Request Analyzer navigation"/);
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/);
 });
 
-test("all non-presentation pages share the homepage navigation and keep their own secondary navigation", async () => {
+test("Request Token Explorer supports Markdown files and a responsive compact Token rail", async () => {
+  const [component, styles, core, demo, page] = await Promise.all([
+    readFile(new URL("../app/request-analyzer/request-analyzer.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/request-analyzer/request-analyzer.module.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/request-analyzer/core.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/request-analyzer/demo.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/request-analyzer/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(component, /accept="\.json,\.jsonl,\.har,\.log,\.txt,\.md,\.markdown"/);
+  assert.match(component, /<option value="auto">Auto detect<\/option>/);
+  assert.match(component, /<option value="request">Request data<\/option>/);
+  assert.match(component, /<option value="markdown">Markdown<\/option>/);
+  assert.match(component, /aria-label=\{chartCompact \? "Expand graph panel" : "Narrow graph panel"\}/);
+  assert.match(component, /chartCompact \? "Expand" : "Narrow"/);
+  assert.match(component, /data-compact=\{chartCompact\}/);
+  assert.doesNotMatch([component, core, demo, page].join("\n"), /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u);
+  assert.match(styles, /\.workspaceCompact\s*\{[^}]*76px/s);
+  assert.match(styles, /--night:\s*#292622/);
+  assert.match(styles, /--paper:\s*#f7e7d2/);
+  assert.match(styles, /--cyan:\s*#a9cee2/);
+  assert.match(styles, /--peach:\s*#f1b58e/);
+  assert.match(styles, /--sun:\s*#e2b84f/);
+  assert.match(styles, /linear-gradient\(rgba\(41, 38, 34, \.035\) 1px/);
+  assert.match(styles, /\.category:nth-child\(4n \+ 2\)/);
+  assert.match(styles, /\.metrics article:nth-child\(3n \+ 2\)/);
+  assert.match(styles, /\.bars li:nth-child\(5n \+ 2\)/);
+  assert.ok(contrastRatio("292622", "f7e7d2") >= 7);
+  assert.ok(contrastRatio("292622", "a9cee2") >= 7);
+  assert.ok(contrastRatio("292622", "f1b58e") >= 7);
+  assert.match(styles, /@media \(max-width: 900px\)[\s\S]*?\.workspaceCompact\s*\{[^}]*grid-template-columns:\s*1fr/);
+  assert.doesNotMatch(styles, /\.chartToggle\s*\{\s*display:\s*none/);
+  assert.match(styles, /@media \(max-width: 900px\)[\s\S]*?\.chartPane\[data-compact="true"\][^}]*flex-direction:\s*row/);
+  assert.match(styles, /\.chartPane\[data-compact="true"\][^}]*[\s\S]*?\.chartContent\s*\{\s*display:\s*none/);
+});
+
+test("all non-presentation pages share the homepage navigation and keep secondary navigation only where needed", async () => {
   const routes = [
     { pathname: "/", secondary: null },
     { pathname: "/field-validation", secondary: "Workshop navigation" },
-    { pathname: "/proxyman-guide", secondary: "Proxyman guide navigation" },
+    { pathname: "/proxyman-guide", secondary: null },
     { pathname: "/request-analyzer", secondary: "Request Analyzer navigation" },
     { pathname: "/workshop", secondary: "Context Lab navigation" },
   ];
@@ -205,6 +244,9 @@ test("all non-presentation pages share the homepage navigation and keep their ow
     if (route.secondary) {
       const secondaryIndex = html.indexOf(`aria-label="${route.secondary}"`);
       assert.ok(secondaryIndex > primaryIndex, `${route.pathname} should render its secondary navigation after the primary navigation`);
+    }
+    if (route.pathname === "/proxyman-guide") {
+      assert.doesNotMatch(html, /aria-label="Proxyman guide navigation"/);
     }
   }
 });

@@ -17,6 +17,7 @@ import {
   AnalyzedRequest,
   CategoryAnalysis,
   ContentNode,
+  InputFormat,
   MAX_INPUT_BYTES,
   MAX_REQUESTS,
   OfficialUsage,
@@ -26,22 +27,23 @@ import { DEMO_REQUEST_TEXT } from "./demo";
 import styles from "./request-analyzer.module.css";
 
 const DEMO_BUNDLE = analyzeInput(DEMO_REQUEST_TEXT, "sanitized-demo.json");
-const ACCEPTED_FILE = /\.(jsonl?|har|log|txt)$/i;
+const ACCEPTED_FILE = /\.(jsonl?|har|log|txt|md|markdown)$/i;
 
 const modeLabels: Record<AnalyzedRequest["mode"], string> = {
-  full: "完整 Request",
+  full: "Full Request",
   summary: "Summary",
   "usage-only": "Usage only",
+  document: "Markdown document",
 };
 
 const confidenceLabels: Record<CategoryAnalysis["confidence"], string> = {
-  exact: "确定",
-  marker: "明确标记",
-  derived: "派生",
+  exact: "Exact",
+  marker: "Explicit marker",
+  derived: "Derived",
 };
 
 function formatNumber(value: number) {
-  return new Intl.NumberFormat("zh-CN").format(Math.round(value));
+  return new Intl.NumberFormat("en-US").format(Math.round(value));
 }
 
 function formatBytes(value?: number) {
@@ -112,11 +114,11 @@ function CategoryView({ category, index, selected, onSelect }: {
         <span className={styles.order}>{String(index + 1).padStart(2, "0")}</span>
         <span className={styles.categoryCopy}>
           <b>{category.label}</b>
-          <small>{category.nodes.length} 个内容块 · {confidenceLabels[category.confidence]}</small>
+          <small>{category.nodes.length} content blocks · {confidenceLabels[category.confidence]}</small>
         </span>
         <span className={styles.categoryValue}>
           <b>{amountLabel(category.amount, category.unit)}</b>
-          <small>{category.unit === "estimated_tokens" ? "估算 Token" : "字符聚合"}</small>
+          <small>{category.unit === "estimated_tokens" ? "Estimated tokens" : "Character aggregate"}</small>
         </span>
       </summary>
       {open && <div className={styles.categoryNodes}>{category.nodes.map((node) => <ContentNodeView key={node.id} node={node} />)}</div>}
@@ -130,7 +132,7 @@ function combineBundles(bundles: AnalysisBundle[], sourceName: string): Analysis
     id: `${bundleIndex}-${request.id}`,
   })));
   if (requests.length > MAX_REQUESTS) {
-    throw new AnalysisError("TOO_MANY_REQUESTS", `识别到 ${requests.length} 个请求，超过 ${MAX_REQUESTS} 个限制。`);
+    throw new AnalysisError("TOO_MANY_REQUESTS", `Found ${requests.length} requests, exceeding the limit of ${MAX_REQUESTS}.`);
   }
   return {
     source: {
@@ -149,10 +151,12 @@ export default function RequestAnalyzer() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [pasteOpen, setPasteOpen] = useState(false);
   const [pastedText, setPastedText] = useState("");
+  const [pasteFormat, setPasteFormat] = useState<InputFormat>("auto");
   const [dragging, setDragging] = useState(false);
   const [isDemo, setIsDemo] = useState(true);
-  const [notice, setNotice] = useState("已加载结构脱敏的本地 Demo");
+  const [notice, setNotice] = useState("Loaded the structure-only sanitized demo");
   const [error, setError] = useState<string | null>(null);
+  const [chartCompact, setChartCompact] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const request = bundle.requests.find((item) => item.id === selectedRequestId) ?? bundle.requests[0];
@@ -172,35 +176,37 @@ export default function RequestAnalyzer() {
   }
 
   function resetDemo() {
-    applyBundle(DEMO_BUNDLE, "已恢复结构脱敏的本地 Demo", true);
+    applyBundle(DEMO_BUNDLE, "Restored the structure-only sanitized demo", true);
     setPastedText("");
+    setPasteFormat("auto");
     setPasteOpen(false);
   }
 
   function parsePasted(event: FormEvent) {
     event.preventDefault();
     try {
-      const next = analyzeInput(pastedText, "pasted-request.json");
-      applyBundle(next, `已在浏览器本地识别 ${next.requests.length} 个请求`);
+      const sourceName = pasteFormat === "markdown" ? "pasted-content.md" : "pasted-content.txt";
+      const next = analyzeInput(pastedText, sourceName, { format: pasteFormat });
+      applyBundle(next, `Identified ${next.requests.length} request${next.requests.length === 1 ? "" : "s"} locally in this browser`);
       setPasteOpen(false);
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : "无法解析这段内容。 ");
+      setError(caught instanceof Error ? caught.message : "Unable to parse this content.");
     }
   }
 
   async function ingestFiles(files: File[]) {
     const accepted = files.filter((file) => ACCEPTED_FILE.test(file.name));
     if (!accepted.length) {
-      setError("请选择 .json、.jsonl、.har、.log 或 .txt 文件。 ");
+      setError("Choose a .json, .jsonl, .har, .log, .txt, .md, or .markdown file.");
       return;
     }
     if (accepted.some((file) => file.size > MAX_INPUT_BYTES)) {
-      setError("至少一个文件超过 5 MiB 限制。 ");
+      setError("At least one file exceeds the 5 MiB limit.");
       return;
     }
     const totalBytes = accepted.reduce((sum, file) => sum + file.size, 0);
     if (totalBytes > MAX_INPUT_BYTES) {
-      setError("所选文件总大小超过 5 MiB 限制。 ");
+      setError("The selected files exceed the 5 MiB total size limit.");
       return;
     }
     const successes: AnalysisBundle[] = [];
@@ -209,16 +215,16 @@ export default function RequestAnalyzer() {
       try {
         successes.push(analyzeInput(await file.text(), file.name));
       } catch (caught) {
-        failures.push(`${file.name}: ${caught instanceof Error ? caught.message : "解析失败"}`);
+        failures.push(`${file.name}: ${caught instanceof Error ? caught.message : "Parsing failed"}`);
       }
     }
     if (!successes.length) {
-      setError(failures.join("；"));
+      setError(failures.join("; "));
       return;
     }
     const next = combineBundles(successes, accepted.map((file) => file.name).join(", "));
     next.warnings.push(...failures);
-    applyBundle(next, `已在浏览器本地读取 ${successes.length} 个文件、${next.requests.length} 个请求`);
+    applyBundle(next, `Loaded ${successes.length} file${successes.length === 1 ? "" : "s"} and ${next.requests.length} request${next.requests.length === 1 ? "" : "s"} locally in this browser`);
     setPasteOpen(false);
   }
 
@@ -234,7 +240,7 @@ export default function RequestAnalyzer() {
   }
 
   return (
-    <main className={styles.page} id="request-analyzer" lang="zh-CN">
+    <main className={styles.page} id="request-analyzer" lang="en">
       <PrimaryNav />
       <PageNav
         label="REQUEST ANALYZER"
@@ -244,20 +250,51 @@ export default function RequestAnalyzer() {
       >
         <div className={styles.topActions}>
           <span className={styles.localStatus}><i /> LOCAL ONLY</span>
-          <button className={styles.secondaryButton} type="button" onClick={resetDemo}>恢复 Demo</button>
-          <button className={styles.primaryButton} type="button" onClick={() => setPasteOpen((value) => !value)}>粘贴实际 Request</button>
+          <button className={styles.demoButton} type="button" onClick={resetDemo}>
+            <span aria-hidden="true">↻</span><b>Reset demo</b>
+          </button>
+          <button
+            className={styles.importButton}
+            type="button"
+            aria-expanded={pasteOpen}
+            aria-controls="request-input-panel"
+            onClick={() => setPasteOpen((value) => !value)}
+          >
+            <span aria-hidden="true">＋</span><b>{pasteOpen ? "Close data input" : "Paste / upload data"}</b>
+          </button>
         </div>
       </PageNav>
 
       <section className={styles.demoBanner} data-demo={isDemo}>
-        <p><b>{isDemo ? "Demo 数据" : "本地数据"}</b>{" "}{notice}</p>
+        <p><b>{isDemo ? "Demo data" : "Local data"}</b>{" "}{notice}</p>
         <span>{modeLabels[request.mode]} · {request.metadata.toolsCount ?? 0} tools · {request.metadata.messagesCount ?? 0} messages</span>
       </section>
 
       {pasteOpen && (
-        <form className={styles.pastePanel} aria-label="粘贴 Request" onSubmit={parsePasted}>
-          <label htmlFor="request-json">Request JSON、JSONL、HAR 或日志文本</label>
-          <textarea id="request-json" value={pastedText} onChange={(event) => setPastedText(event.target.value)} placeholder={'{ "model": "claude-…", "system": […], "tools": […], "messages": […] }'} />
+        <form id="request-input-panel" className={styles.pastePanel} aria-label="Add request data" onSubmit={parsePasted}>
+          <div className={styles.pasteIntro}>
+            <span>ADD REQUEST DATA</span>
+            <h2>Paste text or choose local files</h2>
+            <p>Use either input method below. Analysis happens locally in this browser.</p>
+          </div>
+          <div className={styles.formatField}>
+            <label htmlFor="input-format">Input format</label>
+            <select id="input-format" value={pasteFormat} onChange={(event) => setPasteFormat(event.target.value as InputFormat)}>
+              <option value="auto">Auto detect</option>
+              <option value="request">Request data</option>
+              <option value="markdown">Markdown</option>
+            </select>
+            <small>Auto detects JSON, JSONL, HAR, Usage logs, and structured Markdown.</small>
+          </div>
+          <div className={styles.pasteField}>
+            <label htmlFor="request-content"><span>01</span> Paste request text</label>
+            <textarea
+              id="request-content"
+              value={pastedText}
+              onChange={(event) => setPastedText(event.target.value)}
+              placeholder={pasteFormat === "markdown" ? "# System Prompt\n\nAdd instructions here.\n\n## Memory\n\nAdd explicit memory here." : "Paste Request JSON, logs, HAR content, or structured Markdown here…"}
+            />
+          </div>
           <div
             className={`${styles.fileDrop} ${dragging ? styles.dragging : ""}`}
             onDragEnter={(event) => { event.preventDefault(); setDragging(true); }}
@@ -265,45 +302,46 @@ export default function RequestAnalyzer() {
             onDragLeave={() => setDragging(false)}
             onDrop={onDrop}
           >
-            <input ref={fileInputRef} type="file" multiple accept=".json,.jsonl,.har,.log,.txt" onChange={onFileChange} />
-            <b>也可以拖入本地文件</b>
-            <span>JSON · JSONL · HAR · LOG · TXT，单文件最大 5 MiB</span>
-            <button className={styles.secondaryButton} type="button" onClick={() => fileInputRef.current?.click()}>选择文件</button>
+            <input ref={fileInputRef} type="file" multiple accept=".json,.jsonl,.har,.log,.txt,.md,.markdown" onChange={onFileChange} />
+            <strong><span>02</span> Upload local files</strong>
+            <b>Drop files anywhere in this box</b>
+            <p>JSON · JSONL · HAR · LOG · TXT · MD<br />Up to 5 MiB total</p>
+            <button className={styles.fileButton} type="button" onClick={() => fileInputRef.current?.click()}>Choose local files</button>
           </div>
           <div className={styles.pasteActions}>
-            <button className={styles.secondaryButton} type="button" onClick={() => { setPasteOpen(false); setError(null); }}>取消</button>
-            <button className={styles.primaryButton} type="submit">解析 Request</button>
+            <button className={styles.secondaryButton} type="button" onClick={() => { setPasteOpen(false); setError(null); }}>Cancel</button>
+            <button className={styles.primaryButton} type="submit">Analyze request data →</button>
           </div>
-          <p>内容只在当前浏览器内处理，不上传或保存。Authorization、API Key 与 Cookie 字段默认遮罩。</p>
+          <p className={styles.privacyNote}><b>Local and private:</b> content stays in this browser. Authorization, API key, and Cookie fields are masked by default.</p>
         </form>
       )}
 
       {(error || bundle.warnings.length > 0 || request.warnings.length > 0) && (
         <section className={styles.messages} aria-live="polite">
-          {error && <p className={styles.errorMessage}><b>无法更新分析：</b>{error}</p>}
+          {error && <p className={styles.errorMessage}><b>Unable to update analysis: </b>{error}</p>}
           {[...bundle.warnings, ...request.warnings].map((warning, index) => <p key={`${warning}-${index}`}>{warning}</p>)}
         </section>
       )}
 
       <div className={styles.requestToolbar}>
-        <label htmlFor="request-select">当前 Request</label>
+        <label htmlFor="request-select">Current request</label>
         <select id="request-select" value={request.id} onChange={(event) => { setSelectedRequestId(event.target.value); setSelectedCategory(null); }}>
           {bundle.requests.map((item, index) => <option key={item.id} value={item.id}>{index + 1}. {item.label}</option>)}
         </select>
-        <span>{bundle.requests.length} 个请求</span><span>{modeLabels[request.mode]}</span><span>{request.model ?? "model unknown"}</span><span>{formatBytes(request.metadata.requestBytes)}</span>
+        <span>{bundle.requests.length} request{bundle.requests.length === 1 ? "" : "s"}</span><span>{modeLabels[request.mode]}</span><span>{request.model ?? "model unknown"}</span><span>{formatBytes(request.metadata.requestBytes)}</span>
       </div>
 
-      <div className={styles.workspace}>
+      <div className={`${styles.workspace} ${chartCompact ? styles.workspaceCompact : ""}`}>
         <section className={styles.treePane} aria-labelledby="content-structure-title">
           <div className={styles.sectionHead}>
             <div>
               <span>{request.mode.toUpperCase()} · {request.metadata.format}</span>
-              <h1 id="content-structure-title">内容结构</h1>
-              <p>{request.mode === "full" ? "按本地估算 Token 从大到小排列" : request.mode === "summary" ? "原始正文已移除，显示字符聚合" : "当前数据只保留官方 Usage"}</p>
+              <h1 id="content-structure-title">Content structure</h1>
+              <p>{request.mode === "full" ? "Sorted by locally estimated tokens" : request.mode === "summary" ? "Original content removed; showing character aggregates" : request.mode === "document" ? "Split by Markdown headings with local token estimates" : "Only official usage data is available"}</p>
             </div>
             <div className={styles.total}>
               <b>{request.mode === "usage-only" ? "—" : amountLabel(categoryTotal, request.categories[0]?.unit ?? "estimated_tokens")}</b>
-              <span>{request.mode === "full" ? "分类估算" : request.mode === "summary" ? "字符聚合" : "无内容树"}</span>
+              <span>{request.mode === "full" ? "Category estimate" : request.mode === "summary" ? "Character aggregate" : request.mode === "document" ? "Document estimate" : "No content tree"}</span>
             </div>
           </div>
 
@@ -312,25 +350,42 @@ export default function RequestAnalyzer() {
               {request.categories.map((category, index) => <CategoryView category={category} index={index} key={`${request.id}-${category.id}`} selected={selectedCategory === category.id} onSelect={() => setSelectedCategory(category.id)} />)}
             </div>
           ) : (
-            <div className={styles.emptyState}><b>这份数据没有保留 Request Body</b><p>仍可以查看官方 Input、Cache 与 Output，但不能可靠生成 System、Tools 或 Messages 内容树。</p></div>
+            <div className={styles.emptyState}><b>This dataset does not include the Request Body</b><p>You can still inspect official Input, Cache, and Output usage, but System, Tools, or Messages cannot be reconstructed reliably.</p></div>
           )}
         </section>
 
-        <aside className={styles.chartPane} aria-labelledby="token-usage-title">
-          <div className={styles.sectionHead}>
-            <div><span>OFFICIAL USAGE + LOCAL ATTRIBUTION</span><h2 id="token-usage-title">Token 用量</h2><p>官方 Usage 与本地分类估算分开表达</p></div>
+        <aside className={styles.chartPane} data-compact={chartCompact} aria-label="Token usage graph">
+          <button
+            className={styles.chartToggle}
+            type="button"
+            aria-label={chartCompact ? "Expand graph panel" : "Narrow graph panel"}
+            aria-pressed={chartCompact}
+            onClick={() => setChartCompact((value) => !value)}
+          >
+            <span aria-hidden="true">{chartCompact ? "←" : "→"}</span>
+            <small>{chartCompact ? "Expand" : "Narrow"}</small>
+          </button>
+
+          <div className={styles.compactChartSummary} aria-hidden={!chartCompact}>
+            <strong>Token graph</strong>
+            <span>{request.mode === "usage-only" ? (inputTotal !== undefined ? formatNumber(inputTotal) : "—") : amountLabel(categoryTotal, request.categories[0]?.unit ?? "estimated_tokens")}</span>
           </div>
+
+          <div className={styles.chartContent}>
+            <div className={styles.sectionHead}>
+              <div><span>OFFICIAL USAGE + LOCAL ATTRIBUTION</span><h2>Token usage</h2><p>Official usage and local category estimates are shown separately</p></div>
+            </div>
 
           <div className={styles.metrics}>
-            <article><span>官方新增 Input</span><b>{request.usage ? formatNumber(request.usage.input) : "—"}</b><small>input_tokens</small></article>
-            <article><span>Cache Creation</span><b>{request.usage ? formatNumber(request.usage.cacheCreation) : "—"}</b><small>缓存写入</small></article>
-            <article><span>Cache Read</span><b>{request.usage ? formatNumber(request.usage.cacheRead) : "—"}</b><small>缓存读取</small></article>
-            <article><span>官方总输入上下文</span><b>{inputTotal !== undefined ? formatNumber(inputTotal) : "—"}</b><small>Input + 两类 Cache</small></article>
+            <article><span>Official new input</span><b>{request.usage ? formatNumber(request.usage.input) : "—"}</b><small>input_tokens</small></article>
+            <article><span>Cache Creation</span><b>{request.usage ? formatNumber(request.usage.cacheCreation) : "—"}</b><small>cache write</small></article>
+            <article><span>Cache Read</span><b>{request.usage ? formatNumber(request.usage.cacheRead) : "—"}</b><small>cache read</small></article>
+            <article><span>Official total input context</span><b>{inputTotal !== undefined ? formatNumber(inputTotal) : "—"}</b><small>Input + both Cache types</small></article>
             <article><span>Output</span><b>{request.usage ? formatNumber(request.usage.output) : "—"}</b><small>output_tokens</small></article>
-            <article><span>{request.mode === "summary" ? "本地字符聚合" : "本地分类估算总量"}</span><b>{request.mode === "usage-only" ? "—" : amountLabel(categoryTotal, request.categories[0]?.unit ?? "estimated_tokens")}</b><small>{request.mode === "full" ? "CJK + UTF-8 bytes ÷ 4" : request.mode === "summary" ? "不是 Token" : "无 Request Body"}</small></article>
+            <article><span>{request.mode === "summary" ? "Local character aggregate" : "Local category estimate"}</span><b>{request.mode === "usage-only" ? "—" : amountLabel(categoryTotal, request.categories[0]?.unit ?? "estimated_tokens")}</b><small>{request.mode === "full" || request.mode === "document" ? "CJK + UTF-8 bytes ÷ 4" : request.mode === "summary" ? "Not tokens" : "No Request Body"}</small></article>
           </div>
 
-          <div className={styles.chartHead}><h3>{request.mode === "summary" ? "按字符占比" : "按分类占比"}</h3><span>{request.mode === "summary" ? "characters" : "estimated tokens"}</span></div>
+          <div className={styles.chartHead}><h3>{request.mode === "summary" ? "Breakdown by characters" : "Breakdown by category"}</h3><span>{request.mode === "summary" ? "characters" : "estimated tokens"}</span></div>
           {request.categories.length ? (
             <ol className={`${styles.bars} ${selectedCategory ? styles.hasSelection : ""}`}>
               {request.categories.map((category) => {
@@ -344,18 +399,21 @@ export default function RequestAnalyzer() {
                 );
               })}
             </ol>
-          ) : <p className={styles.noChart}>Usage-only 模式没有可绘制的内容分类。</p>}
+          ) : <p className={styles.noChart}>Usage-only mode has no content categories to chart.</p>}
 
           <div className={styles.reconcile}>
             {reconciliation !== undefined ? (
-              <><b>官方总输入 − 分类估算 = {reconciliation > 0 ? "+" : ""}{formatNumber(reconciliation)}</b><p>差值约为官方总输入的 {reconciliationPercent?.toFixed(1)}%。它可能来自模型 Tokenizer、协议边界或本地估算误差。</p></>
+              <><b>Official total input − category estimate = {reconciliation > 0 ? "+" : ""}{formatNumber(reconciliation)}</b><p>The difference is about {reconciliationPercent?.toFixed(1)}% of official total input. It may come from the model tokenizer, protocol boundaries, or local estimation error.</p></>
             ) : request.mode === "summary" ? (
-              <><b>Summary 只保留字符聚合</b><p>字符数不能转换为官方计费 Token，因此不会伪造分类 Token。</p></>
+              <><b>Summary retains character aggregates only</b><p>Character counts cannot be converted into official billable tokens, so no category tokens are fabricated.</p></>
+            ) : request.mode === "document" ? (
+              <><b>Markdown uses a local token estimate</b><p>Markdown files have no official usage. Headings, body text, and syntax characters all contribute to the estimate.</p></>
             ) : request.mode === "usage-only" ? (
-              <><b>Usage 可用，内容归因不可用</b><p>需要完整 Request Body 才能分析 System、Tools、Messages 与 Tool Result。</p></>
+              <><b>Usage is available; content attribution is not</b><p>A complete Request Body is required to analyze System, Tools, Messages, and Tool Results.</p></>
             ) : (
-              <><b>当前 Request 没有官方 Usage</b><p>分类值仍可帮助理解上下文来源，但不能用于核对实际计费。</p></>
+              <><b>This Request has no official usage</b><p>Category estimates still help explain context sources, but cannot be used to reconcile actual billing.</p></>
             )}
+          </div>
           </div>
         </aside>
       </div>

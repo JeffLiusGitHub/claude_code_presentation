@@ -5,11 +5,11 @@ const toolNames = [
 
 const tools = toolNames.map((name, index) => ({
   name,
-  description: `脱敏演示工具 ${index + 1}。用于展示工具说明与 JSON Schema 会进入模型上下文；这里不包含真实项目内容或参数。`,
+  description: `Sanitized demo tool ${index + 1}. Shows how tool descriptions and JSON Schema enter model context; it contains no real project content or parameters.`,
   input_schema: {
     type: "object",
     properties: {
-      target: { type: "string", description: "演示目标，不会执行真实操作。" },
+      target: { type: "string", description: "A demo target that never performs a real operation." },
       options: { type: "array", items: { type: "string" } },
     },
     required: ["target"],
@@ -26,7 +26,7 @@ export const DEMO_REQUEST_TEXT = JSON.stringify({
       { type: "text", text: "This sanitized block represents longer harness instructions and cacheable context.", cache_control: { type: "ephemeral" } },
       {
         type: "text",
-        text: "Project instructions are sanitized. <memory>Preferred output language: Chinese. Keep token estimates clearly labeled.</memory> Remaining skill documentation stays in System.",
+        text: "Project instructions are sanitized. <memory>Preferred output language: English. Keep token estimates clearly labeled.</memory> Remaining skill documentation stays in System.",
         cache_control: { type: "ephemeral" },
       },
     ],
@@ -34,16 +34,16 @@ export const DEMO_REQUEST_TEXT = JSON.stringify({
     messages: [
       {
         role: "user",
-        content: Array.from({ length: 6 }, (_, index) => ({ type: "text", text: `脱敏历史上下文片段 ${index + 1}。` })),
+        content: Array.from({ length: 6 }, (_, index) => ({ type: "text", text: `Sanitized conversation history segment ${index + 1}.` })),
       },
       {
         role: "assistant",
         content: [
           { type: "thinking", thinking: "Sanitized reasoning placeholder." },
-          { type: "text", text: "我会先查看演示数据结构。" },
+          { type: "text", text: "I will inspect the demo data structure first." },
         ],
       },
-      { role: "user", content: [{ type: "text", text: "请分析这次 Request 的组成。" }] },
+      { role: "user", content: [{ type: "text", text: "Analyze the composition of this Request." }] },
       {
         role: "assistant",
         content: [

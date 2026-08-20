@@ -4,7 +4,9 @@ export const MAX_DEPTH = 64;
 export const MAX_NODES = 100_000;
 export const PREVIEW_CHARS = 2_000;
 
-export type AnalysisMode = "full" | "summary" | "usage-only";
+export type AnalysisMode = "full" | "summary" | "usage-only" | "document";
+export type InputFormat = "auto" | "request" | "markdown";
+export type AnalyzeInputOptions = { format?: InputFormat };
 export type Confidence = "exact" | "marker" | "derived";
 export type MeasureUnit = "estimated_tokens" | "characters";
 export type CategoryId =
@@ -18,6 +20,7 @@ export type CategoryId =
   | "userHistory"
   | "assistantHistory"
   | "attachments"
+  | "document"
   | "other";
 
 export type OfficialUsage = {
@@ -93,6 +96,7 @@ const CATEGORY_LABELS: Record<CategoryId, string> = {
   userHistory: "User History",
   assistantHistory: "Assistant History",
   attachments: "Attachments",
+  document: "Other Markdown",
   other: "Other / Unattributed",
 };
 
@@ -110,6 +114,19 @@ const textEncoder = new TextEncoder();
 const CJK_PATTERN = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/gu;
 const EXPLICIT_MEMORY_PATTERN = /<(memory|claude_memory|project_memory)\b[^>]*>([\s\S]*?)<\/\1>/gi;
 const MEMORY_FILE_MARKER = /(?:CLAUDE|MEMORY)\.md/i;
+const MARKDOWN_FILE = /\.(?:md|markdown)$/i;
+const MARKDOWN_HEADING_CATEGORIES = new Map<string, CategoryId>([
+  ...["system", "system prompt", "system prompts", "system instructions", "system message", "\u7cfb\u7edf\u63d0\u793a\u8bcd", "\u7cfb\u7edf\u63d0\u793a", "\u7cfb\u7edf\u6307\u4ee4"].map((heading) => [heading, "system"] as const),
+  ...["developer", "developer prompt", "developer instructions", "developer message", "\u5f00\u53d1\u8005\u6307\u4ee4"].map((heading) => [heading, "developer"] as const),
+  ...["memory", "memories", "project memory", "claude memory", "\u8bb0\u5fc6"].map((heading) => [heading, "memory"] as const),
+  ...["tools", "tool definitions", "available tools", "tool schemas", "functions", "function definitions", "\u5de5\u5177\u5b9a\u4e49", "\u53ef\u7528\u5de5\u5177"].map((heading) => [heading, "toolDefinitions"] as const),
+  ...["tool calls", "tool call", "tool use", "tool uses", "function calls", "\u5de5\u5177\u8c03\u7528"].map((heading) => [heading, "toolCalls"] as const),
+  ...["tool results", "tool result", "tool outputs", "function results", "function outputs", "\u5de5\u5177\u7ed3\u679c"].map((heading) => [heading, "toolResults"] as const),
+  ...["current user", "current user message", "current request", "latest user message", "\u5f53\u524d\u7528\u6237", "\u5f53\u524d\u7528\u6237\u6d88\u606f"].map((heading) => [heading, "currentUser"] as const),
+  ...["user history", "previous user messages", "user messages", "\u7528\u6237\u5386\u53f2"].map((heading) => [heading, "userHistory"] as const),
+  ...["assistant history", "assistant messages", "assistant responses", "\u52a9\u624b\u5386\u53f2"].map((heading) => [heading, "assistantHistory"] as const),
+  ...["attachments", "images", "documents", "files", "\u9644\u4ef6"].map((heading) => [heading, "attachments"] as const),
+]);
 
 export class AnalysisError extends Error {
   code: string;
@@ -201,7 +218,7 @@ function maskSensitivePreview(value: unknown, depth = 0, seen = new WeakSet<obje
 function preview(value: unknown, redacted: boolean): string {
   if (redacted) return "[REDACTED]";
   const rendered = typeof value === "string" ? value : stableText(maskSensitivePreview(value));
-  return rendered.length > PREVIEW_CHARS ? `${rendered.slice(0, PREVIEW_CHARS)}\n… 已截断 ${rendered.length - PREVIEW_CHARS} 字符` : rendered;
+  return rendered.length > PREVIEW_CHARS ? `${rendered.slice(0, PREVIEW_CHARS)}\n… Truncated ${rendered.length - PREVIEW_CHARS} characters` : rendered;
 }
 
 function createNode(
@@ -232,7 +249,7 @@ function createNode(
     node.children = value.slice(0, 100).map((item, index) =>
       createNode(`[${index}]`, childPath(path, index), item, confidence, undefined, depth + 1),
     );
-    if (value.length > 100) node.note = `${node.note ? `${node.note} ` : ""}仅展开前 100 项。`;
+    if (value.length > 100) node.note = `${node.note ? `${node.note} ` : ""}Only the first 100 items are expandable.`;
     return node;
   }
 
@@ -242,7 +259,7 @@ function createNode(
     const childRedacted = sensitiveKey(key) || (namedSensitive && key.toLowerCase() === "value");
     return createNode(key, childPath(path, key), item, confidence, undefined, depth + 1, childRedacted);
   });
-  if (Object.keys(record).length > 100) node.note = `${node.note ? `${node.note} ` : ""}仅展开前 100 个字段。`;
+  if (Object.keys(record).length > 100) node.note = `${node.note ? `${node.note} ` : ""}Only the first 100 fields are expandable.`;
   return node;
 }
 
@@ -416,25 +433,25 @@ function buildFullCategories(body: JsonRecord): CategoryAnalysis[] {
   systemItems.forEach((item, index) => {
     const path = `$.system[${index}]`;
     if (explicitMemorySource(item)) {
-      add("memory", createNode(`Memory block ${index + 1}`, path, item, "exact", "来源元数据明确标识为 Memory。"));
+      add("memory", createNode(`Memory block ${index + 1}`, path, item, "exact", "Source metadata explicitly identifies this block as Memory."));
       return;
     }
     const text = blockText(item);
     const split = text ? splitMemoryText(text) : { memory: [], remainder: text };
     split.memory.forEach((memoryText, memoryIndex) => {
-      add("memory", createNode(`Memory segment ${memoryIndex + 1}`, `${path}.text<memory:${memoryIndex}>`, memoryText, "marker", "由具有完整边界的 Memory 标签识别。"));
+      add("memory", createNode(`Memory segment ${memoryIndex + 1}`, `${path}.text<memory:${memoryIndex}>`, memoryText, "marker", "Recognized from a supported, fully bounded Memory tag."));
     });
     let systemValue = item;
     if (split.memory.length && isRecord(item)) systemValue = { ...item, text: split.remainder };
     else if (split.memory.length) systemValue = split.remainder;
     const note = MEMORY_FILE_MARKER.test(text) && !split.memory.length
-      ? "发现 CLAUDE.md / MEMORY.md 文件名，但缺少可验证边界；仍归入 System。"
+      ? "CLAUDE.md / MEMORY.md is mentioned without a verifiable boundary; this content remains in System."
       : undefined;
     if (stableText(systemValue).trim()) add("system", createNode(`System block ${index + 1}`, path, systemValue, "exact", note));
   });
 
   for (const key of ["memory", "memories"] as const) {
-    if (body[key] !== undefined) add("memory", createNode(key, `$.${key}`, body[key], "exact", "JSON Path 明确标识为 Memory。"));
+    if (body[key] !== undefined) add("memory", createNode(key, `$.${key}`, body[key], "exact", "The JSON path explicitly identifies this content as Memory."));
   }
   if (body.developer !== undefined) add("developer", createNode("developer", "$.developer", body.developer));
 
@@ -463,7 +480,7 @@ function buildFullCategories(body: JsonRecord): CategoryAnalysis[] {
       else if (type === "text" && role === "user" && messageIndex === currentUserIndex) add("currentUser", createNode(label, path, block));
       else if (type === "text" && role === "user") add("userHistory", createNode(label, path, block));
       else if ((type === "text" || type === "thinking" || type === "redacted_thinking") && role === "assistant") add("assistantHistory", createNode(label, path, block));
-      else add("other", createNode(label, path, block, "derived", `未识别的内容块类型：${type}`));
+      else add("other", createNode(label, path, block, "derived", `Unsupported content block type: ${type}`));
     });
   });
 
@@ -489,8 +506,8 @@ function summaryNode(label: string, path: string, amount: number): ContentNode {
     amount,
     unit: "characters",
     confidence: "derived",
-    preview: `${amount.toLocaleString("en-US")} characters；原始内容已脱敏移除，无法继续展开。`,
-    note: "Summary 模式只保留聚合值。",
+    preview: `${amount.toLocaleString("en-US")} characters; original content was removed during sanitization and cannot be expanded.`,
+    note: "Summary mode retains aggregate values only.",
     redacted: true,
     children: [],
   };
@@ -542,7 +559,156 @@ function makeFullRequest(
       sourceIndex,
     },
     categories: buildFullCategories(body),
-    warnings: usage ? [] : ["当前输入没有可关联的官方 Usage；分类值仅为本地估算。"],
+    warnings: usage ? [] : ["No official Usage could be associated with this input; category values are local estimates only."],
+  };
+}
+
+type MarkdownHeading = { label: string; level: number; index: number };
+
+function markdownLines(text: string): { text: string; index: number }[] {
+  const lines: { text: string; index: number }[] = [];
+  for (const match of text.matchAll(/[^\r\n]*(?:\r\n|\n|\r|$)/g)) {
+    if (!match[0] && match.index === text.length) break;
+    lines.push({
+      text: match[0].replace(/(?:\r\n|\n|\r)$/, ""),
+      index: match.index ?? 0,
+    });
+  }
+  return lines;
+}
+
+function collectMarkdownHeadings(text: string): MarkdownHeading[] {
+  const lines = markdownLines(text);
+  const headings: MarkdownHeading[] = [];
+  let scanStart = 0;
+  let fenceCharacter: "`" | "~" | null = null;
+  let fenceLength = 0;
+
+  if (lines[0]?.text.replace(/^\uFEFF/, "").trim() === "---") {
+    const frontmatterEnd = lines.slice(1).findIndex((line) => /^(?:---|\.\.\.)\s*$/.test(line.text.trim()));
+    if (frontmatterEnd >= 0) scanStart = frontmatterEnd + 2;
+  }
+
+  for (let index = scanStart; index < lines.length; index += 1) {
+    const line = lines[index].text;
+    const fence = line.match(/^\s{0,3}(`{3,}|~{3,})/);
+    if (fence) {
+      const character = fence[1][0] as "`" | "~";
+      if (!fenceCharacter) {
+        fenceCharacter = character;
+        fenceLength = fence[1].length;
+      } else if (character === fenceCharacter && fence[1].length >= fenceLength) {
+        fenceCharacter = null;
+        fenceLength = 0;
+      }
+      continue;
+    }
+    if (fenceCharacter) continue;
+
+    const atx = line.match(/^\s{0,3}(#{1,6})[\t ]+(.+?)(?:[\t ]+#+[\t ]*)?$/);
+    if (atx) {
+      headings.push({ label: atx[2].trim(), level: atx[1].length, index: lines[index].index });
+      continue;
+    }
+
+    const underline = lines[index + 1]?.text.match(/^\s{0,3}(=+|-+)\s*$/);
+    if (line.trim() && underline) {
+      headings.push({ label: line.trim(), level: underline[1][0] === "=" ? 1 : 2, index: lines[index].index });
+      index += 1;
+    }
+  }
+  return headings;
+}
+
+function normalizeMarkdownHeading(value: string): string {
+  return value
+    .replace(/[`*_~]/g, "")
+    .replace(/^\d+(?:\.\d+)*[.)]?[\t ]+/, "")
+    .replace(/[\t ]*[[(](?:≈?[\t ]*)?[\d,.]+[\t ]*(?:tokens?|chars?|characters?)[\])]$/i, "")
+    .trim()
+    .toLowerCase()
+    .replace(/[:：]+$/, "")
+    .replace(/\s+/g, " ");
+}
+
+function markdownCategory(label: string): CategoryId | undefined {
+  return MARKDOWN_HEADING_CATEGORIES.get(normalizeMarkdownHeading(label));
+}
+
+function isLikelyMarkdown(text: string): boolean {
+  if (collectMarkdownHeadings(text).length) return true;
+  if (/^\s*---\s*\r?\n[\s\S]+?\r?\n(?:---|\.\.\.)\s*(?:\r?\n|$)/.test(text)) return true;
+  if (/^\s{0,3}(?:`{3,}|~{3,})[^\r\n]*$/m.test(text)) return true;
+  const listItems = text.match(/^\s{0,3}(?:[-+*]|\d+[.)])[\t ]+\S/gm)?.length ?? 0;
+  const blockQuotes = text.match(/^\s{0,3}>[\t ]+\S/gm)?.length ?? 0;
+  return listItems >= 2 || blockQuotes >= 2;
+}
+
+function makeMarkdownRequest(text: string, sourceName: string, bytes: number): AnalyzedRequest {
+  const headings = collectMarkdownHeadings(text);
+  const buckets = new Map<CategoryId, ContentNode[]>();
+  const add = (id: CategoryId, node: ContentNode) => buckets.set(id, [...(buckets.get(id) ?? []), node]);
+
+  if (!headings.length) {
+    add("document", createNode(sourceName, "$.markdown", text, "exact", "No Markdown headings were found, so the document is kept as one section."));
+  } else {
+    const introduction = text.slice(0, headings[0].index).trim();
+    if (introduction) {
+      add("document", createNode("Document introduction", "$.markdown.introduction", introduction, "exact", "Content before the first Markdown heading."));
+    }
+
+    const activeHeadings: { level: number; category?: CategoryId; sourceLabel?: string }[] = [];
+    headings.forEach((heading, index) => {
+      while (activeHeadings.length && activeHeadings.at(-1)!.level >= heading.level) activeHeadings.pop();
+      const directCategory = markdownCategory(heading.label);
+      const inherited = [...activeHeadings].reverse().find((item) => item.category);
+      const category = directCategory ?? inherited?.category ?? "document";
+      const sourceLabel = directCategory ? heading.label : inherited?.sourceLabel;
+      const confidence: Confidence = directCategory ? "marker" : inherited ? "derived" : "exact";
+      const note = directCategory
+        ? `Classified from the explicit Markdown heading “${heading.label}”.`
+        : inherited
+          ? `Inherited from the parent Markdown heading “${sourceLabel}”.`
+          : "No supported semantic heading matched; kept as Other Markdown.";
+      const start = heading.index;
+      const end = headings[index + 1]?.index ?? text.length;
+      add(category, createNode(
+        heading.label,
+        `$.markdown.sections[${index}]`,
+        text.slice(start, end).trimEnd(),
+        confidence,
+        `${note} Markdown H${heading.level} section.`,
+      ));
+      activeHeadings.push({ level: heading.level, category: directCategory ?? inherited?.category, sourceLabel });
+    });
+  }
+
+  const categories = [...buckets.entries()]
+    .map(([id, nodes]) => ({
+      id,
+      label: CATEGORY_LABELS[id],
+      amount: nodes.reduce((sum, node) => sum + node.amount, 0),
+      unit: "estimated_tokens" as const,
+      confidence: highestConfidence(nodes),
+      nodes,
+    }))
+    .sort((first, second) => second.amount - first.amount);
+  const title = headings[0]?.label.trim();
+  return {
+    id: `${sourceName}-document-0`,
+    label: title ? `${title} · Markdown` : `${sourceName} · Markdown`,
+    mode: "document",
+    metadata: {
+      sourceName,
+      format: "markdown",
+      requestBytes: bytes,
+      sourceIndex: 0,
+    },
+    categories,
+    warnings: [
+      "Markdown has no official Usage; only the deterministic local token estimate is shown.",
+      "Semantic categories are assigned only from supported headings; unmatched sections remain in Other Markdown.",
+    ],
   };
 }
 
@@ -551,7 +717,7 @@ function parseSummaryCollection(value: unknown, sourceName: string, offset: numb
   const looksLikeSummary = value.requests.some((item) => isRecord(item) && (isRecord(item.tokens) || isRecord(item.usage) || isRecord(item.anatomy)) && !Array.isArray(item.messages));
   if (!looksLikeSummary) return [];
   if (value.requests.length > MAX_REQUESTS) {
-    throw new AnalysisError("TOO_MANY_REQUESTS", `识别到 ${value.requests.length} 个请求，超过 ${MAX_REQUESTS} 个限制。`);
+    throw new AnalysisError("TOO_MANY_REQUESTS", `Found ${value.requests.length} requests, exceeding the limit of ${MAX_REQUESTS}.`);
   }
   return value.requests.flatMap((item, index) => {
     if (!isRecord(item)) return [];
@@ -579,8 +745,8 @@ function parseSummaryCollection(value: unknown, sourceName: string, offset: numb
       },
       categories,
       warnings: mode === "summary"
-        ? ["原始 Request Body 已脱敏移除；只能展示字符聚合与官方 Usage。"]
-        : ["此数据只保留官方 Usage，无法生成内容树。"],
+        ? ["The original Request Body was removed during sanitization; only character aggregates and official Usage are available."]
+        : ["This dataset retains official Usage only, so no content tree can be generated."],
     } satisfies AnalyzedRequest];
   });
 }
@@ -618,8 +784,8 @@ function collectObjects(value: unknown): ObjectEntry[] {
   while (stack.length) {
     const current = stack.pop()!;
     nodes += 1;
-    if (nodes > MAX_NODES) throw new AnalysisError("TOO_COMPLEX", `输入包含超过 ${MAX_NODES.toLocaleString()} 个节点。`);
-    if (current.depth > MAX_DEPTH) throw new AnalysisError("TOO_DEEP", `输入嵌套超过 ${MAX_DEPTH} 层。`);
+    if (nodes > MAX_NODES) throw new AnalysisError("TOO_COMPLEX", `Input contains more than ${MAX_NODES.toLocaleString()} nodes.`);
+    if (current.depth > MAX_DEPTH) throw new AnalysisError("TOO_DEEP", `Input nesting exceeds ${MAX_DEPTH} levels.`);
     if (Array.isArray(current.value)) {
       for (let index = current.value.length - 1; index >= 0; index -= 1) stack.push({ value: current.value[index], path: childPath(current.path, index), depth: current.depth + 1 });
     } else if (isRecord(current.value)) {
@@ -667,7 +833,7 @@ function parseStructuredLogs(values: unknown[], sourceName: string, offset: numb
   });
   if (!requestCandidates.length) return [];
   if (requestCandidates.length > MAX_REQUESTS) {
-    throw new AnalysisError("TOO_MANY_REQUESTS", `识别到 ${requestCandidates.length} 个请求，超过 ${MAX_REQUESTS} 个限制。`);
+    throw new AnalysisError("TOO_MANY_REQUESTS", `Found ${requestCandidates.length} requests, exceeding the limit of ${MAX_REQUESTS}.`);
   }
 
   const usageCandidates = objects.flatMap((entry) => {
@@ -703,30 +869,39 @@ function parseValues(text: string): { values: unknown[]; warnings: string[]; for
     if (values.length) {
       return {
         values,
-        warnings: invalid ? [`JSONL 中有 ${invalid} 行无法解析，已跳过。`] : [],
+        warnings: invalid ? [`${invalid} JSONL line${invalid === 1 ? "" : "s"} could not be parsed and ${invalid === 1 ? "was" : "were"} skipped.`] : [],
         format: "jsonl",
       };
     }
-    const message = error instanceof Error ? error.message : "未知 JSON 错误";
-    throw new AnalysisError("INVALID_JSON", `无法解析 JSON 或 JSONL：${message}`);
+    const message = error instanceof Error ? error.message : "Unknown JSON error";
+    throw new AnalysisError("INVALID_JSON", `Unable to parse JSON or JSONL: ${message}`);
   }
 }
 
-export function analyzeInput(text: string, sourceName = "pasted-request.json"): AnalysisBundle {
+export function analyzeInput(text: string, sourceName = "pasted-request.txt", options: AnalyzeInputOptions = {}): AnalysisBundle {
   const trimmed = text.trim();
-  if (!trimmed) throw new AnalysisError("EMPTY_INPUT", "请先粘贴 Request JSON 或选择本地文件。 ");
+  if (!trimmed) throw new AnalysisError("EMPTY_INPUT", "Paste Request data or Markdown, or choose a local file first.");
   const bytes = textEncoder.encode(text).length;
-  if (bytes > MAX_INPUT_BYTES) throw new AnalysisError("INPUT_TOO_LARGE", `输入大小 ${(bytes / 1024 / 1024).toFixed(1)} MiB，超过 5 MiB 限制。`);
+  if (bytes > MAX_INPUT_BYTES) throw new AnalysisError("INPUT_TOO_LARGE", `Input size ${(bytes / 1024 / 1024).toFixed(1)} MiB exceeds the 5 MiB limit.`);
+  const format = options.format ?? "auto";
+  const markdownBundle = (): AnalysisBundle => ({
+    source: { name: sourceName, bytes, format: "markdown" },
+    requests: [makeMarkdownRequest(text, sourceName, bytes)],
+    warnings: [],
+  });
+
+  if (format === "markdown") return markdownBundle();
 
   let parsed: { values: unknown[]; warnings: string[]; format: string };
   try {
     parsed = parseValues(trimmed);
   } catch (error) {
+    if (format === "auto" && (MARKDOWN_FILE.test(sourceName) || isLikelyMarkdown(trimmed))) return markdownBundle();
     const fallbackUsage = usageFromText(trimmed);
     if (!fallbackUsage) throw error;
     return {
       source: { name: sourceName, bytes, format: "text-usage" },
-      warnings: ["文本不是结构化 JSON；只识别到 Usage 字段。"],
+      warnings: ["The text is not structured JSON; only Usage fields were identified."],
       requests: [{
         id: `${sourceName}-usage-0`,
         label: "Usage fields",
@@ -734,7 +909,7 @@ export function analyzeInput(text: string, sourceName = "pasted-request.json"): 
         usage: fallbackUsage,
         metadata: { sourceName, format: "text-usage", sourceIndex: 0 },
         categories: [],
-        warnings: ["此文本只有 Usage，无法生成内容树。"],
+        warnings: ["This text contains Usage only, so no content tree can be generated."],
       }],
     };
   }
@@ -778,12 +953,12 @@ export function analyzeInput(text: string, sourceName = "pasted-request.json"): 
         usage: fallbackUsage,
         metadata: { sourceName, format: "text-usage", sourceIndex: 0 },
         categories: [],
-        warnings: ["没有识别到 Request Body；只能展示 Usage。"],
+        warnings: ["No Request Body was identified; only Usage can be shown."],
       });
     }
   }
-  if (!requests.length) throw new AnalysisError("NO_REQUEST", "内容可以读取，但没有识别到 Anthropic Request、Summary 或 Usage。 ");
-  if (requests.length > MAX_REQUESTS) throw new AnalysisError("TOO_MANY_REQUESTS", `识别到 ${requests.length} 个请求，超过 ${MAX_REQUESTS} 个限制。`);
+  if (!requests.length) throw new AnalysisError("NO_REQUEST", "The content is readable, but no Anthropic Request, Summary, or Usage was identified.");
+  if (requests.length > MAX_REQUESTS) throw new AnalysisError("TOO_MANY_REQUESTS", `Found ${requests.length} requests, exceeding the limit of ${MAX_REQUESTS}.`);
 
   return {
     source: { name: sourceName, bytes, format: parsed.format },
