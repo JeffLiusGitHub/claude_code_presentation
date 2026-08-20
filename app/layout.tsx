@@ -12,9 +12,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = "Agent Context Lab · Claude 流量 Workshop";
+const title = "Claude Context Learning Lab · 从 Presentation 到 Workshop";
 const description =
-  "用真实 Claude Desktop 流量理解 Model、Harness、Context、Tokens 与 Subagents。";
+  "先用互动 Presentation 看懂 Claude Code 请求，再用 Proxyman 检查真实流量，最后进入动手 Workshop。";
 
 export const metadata: Metadata = {
   metadataBase: new URL(

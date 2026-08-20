@@ -40,17 +40,87 @@ async function render(pathname = "/") {
   );
 }
 
-test("server-renders the legacy Agent Context Lab with a presentation link", async () => {
+test("server-renders the four-step learning homepage and preserves the workshop", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /一句 Prompt/);
-  assert.match(html, /AGENT CONTEXT WORKSHOP/);
+  assert.match(html, /四步走完这条学习路线/);
+  assert.match(html, /Presentation 大概讲什么/);
+  assert.match(html, /打开 Proxyman How-to/);
+  assert.match(html, /跳到实际 Workshop/);
   assert.match(html, /href="\/presentation"/);
-  assert.match(html, /互动演示/);
+  assert.match(html, /href="\/proxyman-guide"/);
+  assert.match(html, /href="\/workshop#workshop"/);
+  assert.match(html, /href="\/field-validation"/);
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/);
+
+  const workshopResponse = await render("/workshop");
+  assert.equal(workshopResponse.status, 200);
+  const workshopHtml = await workshopResponse.text();
+  assert.match(workshopHtml, /一句 Prompt/);
+  assert.match(workshopHtml, /AGENT CONTEXT WORKSHOP/);
+  assert.match(workshopHtml, /id="workshop"/);
+  assert.match(workshopHtml, /href="\/presentation"/);
+});
+
+test("homepage reuses the complete presentation palette", async () => {
+  const styles = await readFile(
+    new URL("../app/home.module.css", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(styles, /--night:\s*#292622/);
+  assert.match(styles, /--paper:\s*#f7e7d2/);
+  assert.match(styles, /--accent-cyan:\s*#a9cee2/);
+  assert.match(styles, /--accent-indigo:\s*#f1b58e/);
+  assert.match(styles, /--sky:\s*#3a6998/);
+  assert.match(styles, /--clay:\s*#d37c4f/);
+  assert.match(styles, /--sun:\s*#e2b84f/);
+  assert.match(styles, /prefers-reduced-motion/);
+});
+
+test("server-renders the English Proxyman field validation lab", async () => {
+  const response = await render("/field-validation");
+  assert.equal(response.status, 200);
+
+  const html = await response.text();
+  assert.match(html, /Proxyman Field Validation Task Sheet/);
+  assert.match(html, /The next section is hands-on/);
+  assert.match(html, /Use Proxyman to validate Claude Code network traffic/);
+  assert.match(html, /These reference tasks do not depend on a specific project/);
+  assert.match(html, /Validation tasks/);
+  assert.match(html, /Look for/);
+  assert.match(html, /Pass when/);
+  assert.match(html, /TRAFFIC-DEMO-01/);
+  assert.match(html, /CACHE-DEMO-A/);
+  assert.match(html, /CACHE-DEMO-B/);
+  assert.match(html, /SUBAGENT-DEMO-01/);
+  assert.match(html, /cache_creation_input_tokens/);
+  assert.match(html, /cache_read_input_tokens/);
+  assert.match(html, /stop_reason: tool_use/);
+  assert.match(html, /Authorization/);
+  assert.match(html, /FIELD VALIDATION · 20 MIN/);
+  assert.match(html, /href="\/presentation"/);
+  assert.match(html, /href="\/proxyman-guide"/);
+  assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/);
+});
+
+test("field validation lab reuses the presentation palette", async () => {
+  const styles = await readFile(
+    new URL("../app/field-validation/validation.module.css", import.meta.url),
+    "utf8",
+  );
+
+  assert.match(styles, /--night:\s*#292622/);
+  assert.match(styles, /--paper:\s*#f7e7d2/);
+  assert.match(styles, /--accent-cyan:\s*#a9cee2/);
+  assert.match(styles, /--accent-indigo:\s*#f1b58e/);
+  assert.match(styles, /--sky:\s*#3a6998/);
+  assert.match(styles, /--clay:\s*#d37c4f/);
+  assert.match(styles, /--sun:\s*#e2b84f/);
+  assert.match(styles, /prefers-reduced-motion/);
 });
 
 test("server-renders the full-screen Claude Code request anatomy", async () => {
@@ -77,21 +147,23 @@ test("server-renders the standalone Proxyman setup guide", async () => {
   assert.equal(response.status, 200);
 
   const html = await response.text();
-  assert.match(html, /把 HTTPS.*变成可读证据/s);
+  assert.match(html, /See the agent loop.*on the wire/s);
   assert.match(html, /Install &amp; Trust/);
-  assert.match(html, /Trusted Root Certification Authorities/);
-  assert.match(html, /https:\/\/proxyman\.com\/download/);
-  assert.match(html, /第一次 HTTPS 抓包/);
-  assert.match(html, /结束时恢复网络/);
+  assert.match(html, /Windows trusts the Proxyman root certificate/);
+  assert.match(html, /github\.com\/ProxymanApp\/proxyman-windows-linux\/releases\/tag\/3\.17\.0/);
+  assert.match(html, /Give Claude an observable job/);
+  assert.match(html, /Five signals mean the capture worked/);
   assert.doesNotMatch(html, /og\.png/);
 });
 
 test("keeps the deck interactive, accessible, and the evidence sanitized", async () => {
-  const [page, styles, layout, presentationPage, packageJson, sample, legacySample] = await Promise.all([
+  const [page, styles, layout, presentationPage, homePage, workshopPage, packageJson, sample, legacySample] = await Promise.all([
     readFile(new URL("../app/interactive-presentation.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/presentation.module.css", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/presentation/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/workshop/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../public/data/proxyman-live-sanitized.json", import.meta.url), "utf8"),
     readFile(new URL("../public/data/proxyman-sanitized.json", import.meta.url), "utf8"),
@@ -104,13 +176,21 @@ test("keeps the deck interactive, accessible, and the evidence sanitized", async
   assert.match(page, /aria-label="Slides"/);
   assert.match(page, /AUTO_TIMINGS/);
   assert.match(page, /window\.setInterval/);
-  assert.match(page, /AUTO PLAY/);
+  assert.doesNotMatch(page, /AUTO PLAY/);
   assert.match(page, /requestFullscreen/);
   assert.match(page, /document\.exitFullscreen/);
   assert.match(page, /fullscreenchange/);
   assert.match(page, /Enter fullscreen/);
   assert.match(page, /Exit fullscreen/);
   assert.match(page, /退出全屏（Esc）/);
+  assert.match(page, /aria-label="Back to home"/);
+  assert.match(page, /router\.push\("\/"\)/);
+  assert.match(page, /FROM PROMPT TO TOOLS, CONTEXT, AND FINAL ANSWER/);
+  assert.match(workshopPage, /document\.documentElement\.requestFullscreen/);
+  assert.match(workshopPage, /router\.push\("\/presentation"\)/);
+  assert.match(homePage, /href="\/presentation"/);
+  assert.match(homePage, /href="\/proxyman-guide"/);
+  assert.match(homePage, /href="\/workshop#workshop"/);
   assert.doesNotMatch(page, /setTimeout\(\(\) => goToSlide\(1\)/);
   assert.match(page, /\[sanitized\]/i);
   assert.match(styles, /scroll-snap-type:\s*y mandatory/);
@@ -119,6 +199,7 @@ test("keeps the deck interactive, accessible, and the evidence sanitized", async
   assert.match(styles, /\.shell:fullscreen/);
   assert.match(styles, /\.fullscreenGlyph/);
   assert.match(styles, /\.fullscreenActive/);
+  assert.match(styles, /\.homeButton/);
   assert.doesNotMatch(styles, /@media \(max-width: 900px\)[\s\S]*?\.rail\s*\{\s*display:\s*none/);
   assert.match(styles, /--night:\s*#292622/);
   assert.match(styles, /--paper:\s*#f7e7d2/);
@@ -144,7 +225,7 @@ test("keeps the deck interactive, accessible, and the evidence sanitized", async
   assert.ok(contrastRatio("f7e7d2", "3a6998") >= 4.5);
   assert.match(styles, /prefers-reduced-motion/);
   assert.match(layout, /lang="zh-CN"/);
-  assert.match(layout, /Agent Context Lab/);
+  assert.match(layout, /Claude Context Learning Lab/);
   assert.match(presentationPage, /What Happens After You Press Send in Claude Code/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   assert.match(sample, /"cacheCreation": 43578/);

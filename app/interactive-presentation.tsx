@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./presentation.module.css";
 
 const slideLabels = [
@@ -47,6 +48,7 @@ function FullscreenIcon({ active }: { active: boolean }) {
 }
 
 export default function InteractivePresentation() {
+  const router = useRouter();
   const shellRef = useRef<HTMLElement>(null);
   const deckRef = useRef<HTMLElement>(null);
   const slideRefs = useRef<(HTMLElement | null)[]>([]);
@@ -105,8 +107,9 @@ export default function InteractivePresentation() {
 
   useEffect(() => {
     function onFullscreenChange() {
-      setIsFullscreen(document.fullscreenElement === shellRef.current);
+      setIsFullscreen(Boolean(document.fullscreenElement));
     }
+    onFullscreenChange();
     document.addEventListener("fullscreenchange", onFullscreenChange);
     return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, []);
@@ -216,18 +219,33 @@ export default function InteractivePresentation() {
       await document.exitFullscreen();
       return;
     }
-    await shellRef.current?.requestFullscreen();
+    if (typeof shellRef.current?.requestFullscreen === "function") {
+      await shellRef.current.requestFullscreen();
+    }
+  }
+
+  async function returnHome() {
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+    } catch {
+      // Route home even if the browser exits fullscreen on its own.
+    }
+    router.push("/");
   }
 
   return (
     <main className={styles.shell} ref={shellRef}>
       <header className={styles.chrome} aria-label="Presentation controls">
-        <button className={styles.wordmark} onClick={() => goToSlide(0)}>
-          <span>CLAUDE CODE</span>
-          <b>REQUEST ANATOMY</b>
-        </button>
+        <div className={styles.headerStart}>
+          <button className={styles.homeButton} onClick={() => { void returnHome(); }} aria-label="Back to home" title="Back to home">
+            <span aria-hidden="true">←</span>
+          </button>
+          <button className={styles.wordmark} onClick={() => goToSlide(0)}>
+            <span>CLAUDE CODE</span>
+            <b>REQUEST ANATOMY</b>
+          </button>
+        </div>
         <div className={styles.headerMeta}>
-          <div className={styles.autoStatus}><i /><span>AUTO PLAY</span></div>
           <div className={styles.counter} aria-live="polite">
             <span>{String(activeSlide + 1).padStart(2, "0")}</span><i /><span>{String(slideLabels.length).padStart(2, "0")}</span>
           </div>
@@ -256,7 +274,7 @@ export default function InteractivePresentation() {
           <div className={styles.gridLines} aria-hidden="true" />
           <div className={styles.heroOrb} aria-hidden="true"><span /><span /><span /></div>
           <div className={styles.slideContent}>
-            <p className={styles.eyebrow}>A 14-MINUTE INTERACTIVE EXPLAINER</p>
+            <p className={styles.eyebrow}>FROM PROMPT TO TOOLS, CONTEXT, AND FINAL ANSWER</p>
             <h1>What happens after<br />you press <em>send?</em></h1>
             <p className={styles.subtitle}>The Anatomy of a Claude Code Request</p>
             <button className={`${styles.sendButton} ${sent ? styles.sent : ""}`} onClick={sendRequest}>
@@ -266,7 +284,6 @@ export default function InteractivePresentation() {
           <div className={`${styles.signal} ${sent ? styles.signalActive : ""}`} aria-hidden="true">
             <span>USER REQUEST</span><i /><span>HARNESS</span><i /><span>MODEL</span>
           </div>
-          <p className={styles.hint}>AUTO PLAYS · USE LEFT RAIL TO ADVANCE</p>
         </article>
 
         <article className={`${styles.slide} ${styles.dualSlide}`} data-index="1" ref={(node) => { slideRefs.current[1] = node; }}>

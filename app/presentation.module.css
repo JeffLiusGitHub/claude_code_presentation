@@ -36,13 +36,14 @@
 .slide { position: relative; min-height: 100svh; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; isolation: isolate; }
 .slideContent { position: relative; z-index: 3; width: min(1580px, calc(100% - 10vw)); min-height: 100svh; margin: 0 auto; padding: clamp(96px, 12vh, 142px) 0 clamp(76px, 9vh, 110px); }
 .chrome { position: fixed; z-index: 50; top: 0; left: 0; display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 24px 34px; pointer-events: none; mix-blend-mode: difference; }
+.headerStart { display: flex; align-items: center; gap: 18px; pointer-events: auto; }
+.homeButton { display: grid; width: 40px; height: 38px; place-items: center; padding: 0; border: 1px solid rgba(255,255,255,.72); background: transparent; color: white; cursor: pointer; font: 500 20px/1 var(--font-sans); transition: background 160ms ease, color 160ms ease, transform 160ms ease; }
+.homeButton:hover { background: white; color: var(--night); transform: translateX(-2px); }
 .wordmark { display: flex; align-items: center; gap: 12px; border: 0; background: transparent; color: white; cursor: pointer; pointer-events: auto; }
-.wordmark span, .wordmark b, .counter, .eyebrow, .hint, .panelIndex, .modelPanel small, .harnessPanel small, .traceLabel { font-family: var(--font-mono); letter-spacing: 0.1em; }
+.wordmark span, .wordmark b, .counter, .eyebrow, .panelIndex, .modelPanel small, .harnessPanel small, .traceLabel { font-family: var(--font-mono); letter-spacing: 0.1em; }
 .wordmark span { font-size: 12px; font-weight: 900; }
 .wordmark b { padding: 6px 8px; border: 1px solid currentColor; font-size: 9px; }
 .headerMeta { display: flex; align-items: center; gap: 20px; pointer-events: none; }
-.autoStatus { display: flex; align-items: center; gap: 8px; color: white; font: 900 11px/1 var(--font-mono); letter-spacing: .09em; }
-.autoStatus i { width: 9px; height: 9px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 0 0 rgba(var(--accent-cyan-rgb),.45); animation: autoPulse 1.8s ease-out infinite; }
 .counter { display: flex; align-items: center; gap: 9px; color: white; font-size: 11px; font-weight: 800; }
 .counter i { width: 36px; height: 1px; background: currentColor; }
 .rail { position: fixed; z-index: 40; top: 50%; left: 0; display: grid; width: max-content; gap: 4px; padding: 10px 12px; opacity: .46; filter: saturate(.28); isolation: isolate; transform: translateY(-50%); transition: opacity 220ms ease, filter 220ms ease; }
@@ -98,7 +99,6 @@
 .signal i::after { position: absolute; inset: 0; background: var(--accent-cyan); content: ""; transform: translateX(-110%); }
 .signalActive i::after { animation: signalMove 650ms ease-in-out both; }
 .signalActive i:nth-of-type(2)::after { animation-delay: 260ms; }
-.hint { position: absolute; right: 34px; bottom: 92px; margin: 0; color: rgba(255,255,255,.36); font-size: 9px; font-weight: 800; writing-mode: vertical-rl; }
 .dualSlide { background: var(--paper); color: var(--night); }
 .dualSlide::after { position: absolute; z-index: 0; right: -12vw; bottom: -22vw; width: 48vw; aspect-ratio: 1; border-radius: 50%; background: var(--clay); content: ""; opacity: .12; }
 .dualSlide .eyebrow { color: var(--sky); }
@@ -382,7 +382,6 @@
 .subtitle { font-size: clamp(21px, 1.75vw, 29px); }
 .sendButton { min-width: 250px; font-size: 13px; }
 .signal { font-size: 12px; }
-.hint { font-size: 11px; }
 .panelIndex { font-size: 14px; }
 .modelPanel small, .harnessPanel small { font-size: 13px; }
 .modelPanel li, .harnessPanel li { font-size: clamp(17px, 1.2vw, 21px); }
@@ -447,7 +446,6 @@
 .finalFlow { font-size: 12px; }
 .finalActions a, .finalActions button { font-size: 13px; }
 
-@keyframes autoPulse { 70%,100% { box-shadow: 0 0 0 9px rgba(var(--accent-cyan-rgb),0); } }
 @keyframes streamReveal { 0%,20%,100% { opacity: .22; } 35%,70% { opacity: 1; } }
 @keyframes eventBlink { 0%,18%,100% { background: var(--surface-muted); } 25%,50% { background: var(--accent-cyan); } }
 @keyframes finalPulse { 0%,100% { opacity: .35; transform: translate(-50%,-50%) scale(.96); } 50% { opacity: .9; transform: translate(-50%,-50%) scale(1.04); } }
@@ -485,11 +483,13 @@
 }
 @media (max-width: 580px) {
   .chrome { padding: 18px; }
+  .headerStart { gap: 9px; }
+  .homeButton { width: 36px; height: 34px; font-size: 18px; }
   .wordmark b { display: none; }
   .arrowControls { right: 16px; bottom: 16px; }
   .hero h1 { font-size: clamp(52px,15vw,80px); }
   .subtitle { max-width: 290px; }
-  .signal, .hint { display: none; }
+  .signal { display: none; }
   .dualSlide .slideContent, .loopSlide .slideContent { padding-bottom: 80px; }
   .dualSlide h2, .loopSlide h2 { font-size: 46px; }
   .modelPanel, .harnessPanel { grid-template-columns: 32px 1fr; padding: 23px; }
@@ -607,7 +607,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .deck { scroll-behavior: auto; }
-  .autoStatus i, .heroOrb, .loopTrack i, .requestPacket, .resultPacket, .streamOutput i, .eventRail b, .finalBackdrop i { animation: none; }
+  .heroOrb, .loopTrack i, .requestPacket, .resultPacket, .streamOutput i, .eventRail b, .finalBackdrop i { animation: none; }
   .signalActive i::after, .sendButton.sent i { animation-duration: 1ms; }
   .progress i, .modelPanel, .harnessPanel, .loopNode, .rail, .rail::before, .rail button, .rail b { transition: none; }
 }
