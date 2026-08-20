@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 :root {
+  --font-geist-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Arial, sans-serif;
+  --font-geist-mono: "SFMono-Regular", "SF Mono", "Cascadia Code", Consolas, monospace;
   --ink: #14211c;
   --ink-2: #1d3028;
   --paper: #f2efe6;
@@ -2636,6 +2638,9 @@ footer > a {
   .pmg-success-strip > * { border-right: 0; border-bottom: 1px solid var(--pmg-navy); }
   .pmg-ready > div { grid-template-columns: 1fr; }
   .pmg-ready p { border-right: 0; border-bottom: 1px solid var(--pmg-navy); }
+  .pmg-ca-note { grid-template-columns: minmax(0, 1fr); }
+  .pmg-ca-note p { min-width: 0; overflow-wrap: anywhere; }
+  .pmg-ca-note strong { grid-column: 1; }
 }
 
 @media (max-width: 560px) {

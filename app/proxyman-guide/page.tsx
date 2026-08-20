@@ -35,7 +35,15 @@ const Evidence = ({
 }) => (
   <figure className={`pmg-evidence${wide ? " pmg-evidence-wide" : ""}`}>
     <div className="pmg-evidence-frame">
-      <Image src={src} alt={alt} width={2100} height={1342} loading="eager" unoptimized />
+      <Image
+        src={src}
+        alt={alt}
+        width={2100}
+        height={1342}
+        loading="lazy"
+        sizes="(max-width: 760px) 100vw, (max-width: 1000px) 50vw, 62vw"
+        unoptimized
+      />
     </div>
     <figcaption>{caption}</figcaption>
   </figure>

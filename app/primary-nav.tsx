@@ -6,7 +6,7 @@ type PrimaryNavProps = {
 
 export default function PrimaryNav({ brandHref = "/#top" }: PrimaryNavProps) {
   return (
-    <nav className={styles.nav} aria-label="Primary navigation">
+    <nav className={`${styles.nav} ${styles.primaryNav}`} aria-label="Primary navigation">
       <a className={styles.brand} href={brandHref} aria-label="Back to homepage">
         <span>CLAUDE / CONTEXT</span>
         <b>LEARNING LAB</b>

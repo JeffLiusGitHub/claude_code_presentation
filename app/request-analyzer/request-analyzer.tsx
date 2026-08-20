@@ -37,7 +37,7 @@ const modeLabels: Record<AnalyzedRequest["mode"], string> = {
 };
 
 const confidenceLabels: Record<CategoryAnalysis["confidence"], string> = {
-  exact: "Exact",
+  exact: "Direct field",
   marker: "Explicit marker",
   derived: "Derived",
 };
@@ -114,7 +114,7 @@ function CategoryView({ category, index, selected, onSelect }: {
         <span className={styles.order}>{String(index + 1).padStart(2, "0")}</span>
         <span className={styles.categoryCopy}>
           <b>{category.label}</b>
-          <small>{category.nodes.length} content blocks · {confidenceLabels[category.confidence]}</small>
+          <small>{category.nodes.length} content block{category.nodes.length === 1 ? "" : "s"} · {confidenceLabels[category.confidence]}</small>
         </span>
         <span className={styles.categoryValue}>
           <b>{amountLabel(category.amount, category.unit)}</b>
@@ -154,7 +154,7 @@ export default function RequestAnalyzer() {
   const [pasteFormat, setPasteFormat] = useState<InputFormat>("auto");
   const [dragging, setDragging] = useState(false);
   const [isDemo, setIsDemo] = useState(true);
-  const [notice, setNotice] = useState("Loaded the structure-only sanitized demo");
+  const [notice, setNotice] = useState("Loaded a shortened, structure-only sanitized demo");
   const [error, setError] = useState<string | null>(null);
   const [chartCompact, setChartCompact] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -176,7 +176,7 @@ export default function RequestAnalyzer() {
   }
 
   function resetDemo() {
-    applyBundle(DEMO_BUNDLE, "Restored the structure-only sanitized demo", true);
+    applyBundle(DEMO_BUNDLE, "Restored the shortened, structure-only sanitized demo", true);
     setPastedText("");
     setPasteFormat("auto");
     setPasteOpen(false);
@@ -403,7 +403,14 @@ export default function RequestAnalyzer() {
 
           <div className={styles.reconcile}>
             {reconciliation !== undefined ? (
-              <><b>Official total input − category estimate = {reconciliation > 0 ? "+" : ""}{formatNumber(reconciliation)}</b><p>The difference is about {reconciliationPercent?.toFixed(1)}% of official total input. It may come from the model tokenizer, protocol boundaries, or local estimation error.</p></>
+              <>
+                <b>Official total input − category estimate = {reconciliation > 0 ? "+" : ""}{formatNumber(reconciliation)}</b>
+                <p>
+                  {isDemo
+                    ? "The sanitized demo keeps representative structure but intentionally shortens content while retaining reference usage totals. This gap is expected and is not a tokenizer benchmark."
+                    : `The difference is about ${reconciliationPercent?.toFixed(1)}% of official total input. It may come from the model tokenizer, protocol boundaries, or local estimation error.`}
+                </p>
+              </>
             ) : request.mode === "summary" ? (
               <><b>Summary retains character aggregates only</b><p>Character counts cannot be converted into official billable tokens, so no category tokens are fabricated.</p></>
             ) : request.mode === "document" ? (

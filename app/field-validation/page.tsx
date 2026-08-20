@@ -4,10 +4,15 @@ import PageNav from "../page-nav";
 import PrimaryNav from "../primary-nav";
 import styles from "./validation.module.css";
 
+const title = "Claude Traffic Workshop";
+const description =
+  "A 20-minute hands-on workshop for inspecting the Claude Code agent loop, prompt cache, streaming, and subagents in Proxyman.";
+
 export const metadata: Metadata = {
-  title: "Claude Traffic Workshop",
-  description:
-    "A 20-minute hands-on workshop for inspecting the Claude Code agent loop, prompt cache, streaming, and subagents in Proxyman.",
+  title,
+  description,
+  openGraph: { title, description, images: [] },
+  twitter: { card: "summary", title, description, images: [] },
 };
 
 const taskOnePrompt = `[TRAFFIC-DEMO-01] This is a read-only validation task. First use Bash to print the current working directory, then use Glob to list no more than 10 files or folders in the current directory, and finally summarize what you saw in one sentence. Do not create, modify, or delete any files.`;

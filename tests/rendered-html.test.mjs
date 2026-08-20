@@ -56,6 +56,7 @@ test("server-renders the fully English learning homepage and routes to Workshop"
   assert.match(html, /href="\/field-validation"/);
   assert.doesNotMatch(html, /href="\/workshop(?:#workshop)?"/);
   assert.doesNotMatch(html, /[\u4e00-\u9fff]/);
+  assert.doesNotMatch(html, /(?:C:|\.vinext[\\/])[^"<]*fonts/i);
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/);
 });
 
@@ -72,6 +73,8 @@ test("homepage reuses the complete presentation palette", async () => {
   assert.match(styles, /--sky:\s*#3a6998/);
   assert.match(styles, /--clay:\s*#d37c4f/);
   assert.match(styles, /--sun:\s*#e2b84f/);
+  assert.match(styles, /@media \(max-width: 820px\)[\s\S]*?\.primaryNav \.navLinks\s*\{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.primaryNav \.navLinks a:not\(\.navCta\)\s*\{\s*display:\s*flex/);
   assert.match(styles, /prefers-reduced-motion/);
 });
 
@@ -151,9 +154,29 @@ test("server-renders the full-screen Claude Code request anatomy", async () => {
   assert.match(html, /Inspect a real request/i);
   assert.match(html, /cache_creation_input_tokens/);
   assert.match(html, /CLAUDE_CANARY_123/);
-  assert.match(html, /https:\/\/agent-context-proxyman-guide\.jeffliujeffliu\.chatgpt\.site\/og\.png/);
+  assert.doesNotMatch(html, /og\.png/);
   assert.doesNotMatch(html, /aria-label="Primary navigation"/);
   assert.doesNotMatch(html, /Your site is taking shape|react-loading-skeleton/);
+});
+
+test("each major route emits its own title and social metadata", async () => {
+  const routes = [
+    ["/presentation", "What Happens After You Press Send in Claude Code?"],
+    ["/field-validation", "Claude Traffic Workshop"],
+    ["/workshop", "Claude Context Lab · Reference &amp; Evidence"],
+    ["/proxyman-guide", "Proxyman Setup · Capture the Claude Agent Loop"],
+    ["/request-analyzer", "Request Token Explorer · Claude Context Learning Lab"],
+  ];
+
+  for (const [pathname, title] of routes) {
+    const response = await render(pathname);
+    assert.equal(response.status, 200);
+    const html = await response.text();
+    assert.ok(html.includes(`<title>${title}</title>`), `${pathname} should emit its route title`);
+    assert.ok(html.includes(`property="og:title" content="${title}"`), `${pathname} should emit its Open Graph title`);
+    assert.ok(html.includes(`name="twitter:title" content="${title}"`), `${pathname} should emit its Twitter title`);
+    assert.doesNotMatch(html, /og\.png/, `${pathname} should not inherit the homepage social image`);
+  }
 });
 
 test("server-renders the standalone Proxyman setup guide", async () => {
@@ -170,6 +193,19 @@ test("server-renders the standalone Proxyman setup guide", async () => {
   assert.match(html, /href="\/field-validation"[^>]*>Enter the Workshop/);
   assert.doesNotMatch(html, /Open the presentation/);
   assert.doesNotMatch(html, /og\.png/);
+});
+
+test("Proxyman evidence is lazy-loaded and the CA note collapses without mobile overflow", async () => {
+  const [page, styles] = await Promise.all([
+    readFile(new URL("../app/proxyman-guide/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(page, /loading="lazy"/);
+  assert.match(page, /sizes="\(max-width: 760px\) 100vw/);
+  assert.doesNotMatch(page, /loading="eager"/);
+  assert.match(styles, /@media \(max-width: 760px\)[\s\S]*?\.pmg-ca-note\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\)/);
+  assert.match(styles, /\.pmg-ca-note p\s*\{[^}]*overflow-wrap:\s*anywhere/);
 });
 
 test("server-renders the local-only Request Token Explorer", async () => {
@@ -205,6 +241,9 @@ test("Request Token Explorer supports Markdown files and a responsive compact To
   assert.match(component, /aria-label=\{chartCompact \? "Expand graph panel" : "Narrow graph panel"\}/);
   assert.match(component, /chartCompact \? "Expand" : "Narrow"/);
   assert.match(component, /data-compact=\{chartCompact\}/);
+  assert.match(component, /Direct field/);
+  assert.match(component, /intentionally shortens content while retaining reference usage totals/);
+  assert.match(component, /content block\{category\.nodes\.length === 1/);
   assert.doesNotMatch([component, core, demo, page].join("\n"), /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}]/u);
   assert.match(styles, /\.workspaceCompact\s*\{[^}]*76px/s);
   assert.match(styles, /--night:\s*#292622/);
@@ -329,6 +368,7 @@ test("keeps the deck interactive, accessible, and the evidence sanitized", async
   assert.match(styles, /prefers-reduced-motion/);
   assert.match(layout, /lang="en"/);
   assert.match(layout, /Claude Context Learning Lab/);
+  assert.doesNotMatch(layout, /next\/font\/google|Geist\(/);
   assert.match(presentationPage, /What Happens After You Press Send in Claude Code/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);
   assert.match(sample, /"cacheCreation": 43578/);
