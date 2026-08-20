@@ -298,9 +298,10 @@ test("all non-presentation pages share the homepage navigation and keep secondar
 });
 
 test("keeps the deck interactive, accessible, and the evidence sanitized", async () => {
-  const [page, styles, layout, presentationPage, homePage, primaryNav, pageNav, workshopPage, workshopContent, packageJson, sample, legacySample] = await Promise.all([
+  const [page, styles, globalStyles, layout, presentationPage, homePage, primaryNav, pageNav, workshopPage, workshopContent, packageJson, sample, legacySample] = await Promise.all([
     readFile(new URL("../app/interactive-presentation.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/presentation.module.css", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/presentation/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
@@ -350,13 +351,21 @@ test("keeps the deck interactive, accessible, and the evidence sanitized", async
   assert.match(styles, /\.fullscreenActive/);
   assert.match(styles, /\.homeButton/);
   assert.doesNotMatch(styles, /@media \(max-width: 900px\)[\s\S]*?\.rail\s*\{\s*display:\s*none/);
-  assert.match(styles, /--night:\s*#292622/);
-  assert.match(styles, /--paper:\s*#f7e7d2/);
-  assert.match(styles, /--accent-cyan:\s*#a9cee2/);
-  assert.match(styles, /--accent-indigo:\s*#f1b58e/);
-  assert.match(styles, /--sky:\s*#3a6998/);
-  assert.match(styles, /--clay:\s*#d37c4f/);
-  assert.match(styles, /--sun:\s*#e2b84f/);
+  assert.match(globalStyles, /--black:\s*#131313/);
+  assert.match(globalStyles, /--light:\s*#f8f8f8/i);
+  assert.match(globalStyles, /--grey:\s*#989a9c/i);
+  assert.match(globalStyles, /--accent:\s*#00c1d5/i);
+  assert.match(globalStyles, /--accent-soft:\s*#99e5ee/i);
+  assert.match(globalStyles, /--accent-deep:\s*#006a76/i);
+  assert.match(globalStyles, /--display:\s*"Proxima Nova",\s*"Open Sans",\s*"Poppins"/);
+  assert.match(globalStyles, /--text:\s*"Crimson Text",\s*Georgia,\s*serif/);
+  assert.match(styles, /--night:\s*var\(--black\)/);
+  assert.match(styles, /--paper:\s*var\(--light\)/);
+  assert.match(styles, /--accent-cyan:\s*var\(--accent\)/);
+  assert.match(styles, /--accent-indigo:\s*var\(--accent\)/);
+  assert.match(styles, /--font-sans:\s*var\(--display\)/);
+  assert.match(styles, /--font-serif:\s*var\(--text\)/);
+  assert.doesNotMatch(styles, /#[0-9a-f]{3,8}/i);
   assert.match(styles, /\.rail\s*\{[^}]*left:\s*0/);
   assert.match(styles, /\.rail\s*\{[^}]*opacity:\s*\.46[^}]*filter:\s*saturate\(\.28\)/);
   assert.match(styles, /\.rail:hover\s*\{[^}]*opacity:\s*1[^}]*filter:\s*saturate\(1\)/);
@@ -366,15 +375,15 @@ test("keeps the deck interactive, accessible, and the evidence sanitized", async
   assert.match(styles, /\.rail:hover b\s*\{[^}]*max-width:\s*130px/);
   assert.match(styles, /\.rail:hover button:hover b\s*\{[^}]*color:\s*var\(--sun\)/);
   assert.doesNotMatch(styles, /\.rail \.railActive b/);
-  assert.match(styles, /SF Pro Display/);
-  assert.match(styles, /SFMono-Regular/);
-  assert.doesNotMatch(styles, /#ff7356|#c9f45b|#8fd3c8|#aeb7f2|Courier New/i);
-  assert.ok(contrastRatio("292622", "a9cee2") >= 7);
-  assert.ok(contrastRatio("292622", "f1b58e") >= 7);
-  assert.ok(contrastRatio("f7e7d2", "3a6998") >= 4.5);
+  assert.match(styles, /font-family:\s*var\(--text\)/);
+  assert.doesNotMatch(styles, /#292622|#f7e7d2|#a9cee2|#f1b58e|#e2b84f|Courier New/i);
+  assert.ok(contrastRatio("131313", "00c1d5") >= 7);
+  assert.ok(contrastRatio("131313", "f8f8f8") >= 7);
+  assert.ok(contrastRatio("f8f8f8", "006a76") >= 4.5);
   assert.match(styles, /prefers-reduced-motion/);
   assert.match(layout, /lang="en"/);
   assert.match(layout, /Claude Context Learning Lab/);
+  assert.match(layout, /fonts\.googleapis\.com\/css2\?family=Crimson\+Text/);
   assert.doesNotMatch(layout, /next\/font\/google|Geist\(/);
   assert.match(presentationPage, /What Happens After You Press Send in Claude Code/);
   assert.doesNotMatch(packageJson, /react-loading-skeleton/);

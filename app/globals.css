@@ -1,6 +1,27 @@
 @import "tailwindcss";
 
 :root {
+  /* Presentation design system: edit these tokens to retarget the deck. */
+  --black: #131313;
+  --light: #F8F8F8;
+  --grey: #989A9C;
+  --accent: #00C1D5;
+  --accent-soft: #99E5EE;
+  --accent-deep: #006A76;
+  --neutral-light-2: #EFEFEF;
+  --neutral-light-3: #DDDDDE;
+  --neutral-dark-1: #BABBBD;
+  --neutral-dark-2: #53565A;
+  --neutral-dark-3: #1B1B1B;
+  --accent-tint: #CCF2F7;
+  --accent-mid: #00A6B9;
+  --heading-dark: #FFFFFF;
+  --black-rgb: 19, 19, 19;
+  --light-rgb: 248, 248, 248;
+  --accent-rgb: 0, 193, 213;
+  --display: "Proxima Nova", "Open Sans", "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --text: "Crimson Text", Georgia, serif;
+
   --font-geist-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Arial, sans-serif;
   --font-geist-mono: "SFMono-Regular", "SF Mono", "Cascadia Code", Consolas, monospace;
   --ink: #14211c;
