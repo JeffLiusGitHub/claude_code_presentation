@@ -251,7 +251,7 @@ export default function InteractivePresentation() {
 
   return (
     <main className={styles.shell} ref={shellRef}>
-      <header className={styles.chrome} aria-label="Presentation controls">
+      <header className={styles.chrome} aria-label="Presentation controls; press S to toggle the speaker script">
         <div className={styles.headerStart}>
           <button className={styles.homeButton} onClick={() => { void returnHome(); }} aria-label="Back to home" title="Back to home">
             <span aria-hidden="true">←</span>
@@ -262,16 +262,6 @@ export default function InteractivePresentation() {
           </button>
         </div>
         <div className={styles.headerMeta}>
-          <button
-            className={`${styles.scriptButton} ${isScriptOpen ? styles.scriptButtonActive : ""}`}
-            onClick={() => setIsScriptOpen((current) => !current)}
-            aria-label={isScriptOpen ? "Hide speaker script" : "Show speaker script"}
-            aria-expanded={isScriptOpen}
-            aria-controls="speaker-script-panel"
-            title="Speaker script (S)"
-          >
-            <span>SCRIPT</span><kbd>S</kbd>
-          </button>
           <div className={styles.counter} aria-live="polite">
             <span>{String(activeSlide + 1).padStart(2, "0")}</span><i /><span>{String(slideLabels.length).padStart(2, "0")}</span>
           </div>

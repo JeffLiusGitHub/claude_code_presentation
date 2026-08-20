@@ -408,79 +408,83 @@
 .finalActions button { border-color: rgba(var(--light-rgb),.35); background: transparent; color: var(--heading-dark); }
 .finalActions a:hover, .finalActions button:hover { transform: translateY(-3px); }
 
-/* Presentation-distance readability: enlarge supporting copy without flattening hierarchy. */
-.wordmark span { font-size: 14px; }
-.wordmark b { font-size: 11px; }
-.counter { font-size: 13px; }
-.rail span { font-size: 11px; }
-.rail b { font-size: 12px; }
-.eyebrow { font-size: clamp(13px, .9vw, 16px); }
-.subtitle { font-size: clamp(21px, 1.75vw, 29px); }
-.sendButton { min-width: 250px; font-size: 13px; }
-.signal { font-size: 12px; }
-.panelIndex { font-size: 14px; }
-.modelPanel small, .harnessPanel small { font-size: 13px; }
-.modelPanel li, .harnessPanel li { font-size: clamp(17px, 1.2vw, 21px); }
-.bridge span { font-size: 12px; }
-.focusNote span { font-size: 13px; }
-.focusNote p { font-size: clamp(18px, 1.35vw, 23px); }
-.loopHeader p { font-size: clamp(19px, 1.55vw, 24px); }
-.loopNode span { font-size: 13px; }
-.loopNode small { font-size: 16px; }
-.loopTrigger, .traceLabel { font-size: 13px; }
-.tracePanel li i { font-size: 12px; }
-.tracePanel li code { font-size: 15px; }
-.tracePanel p { font-size: 16px; }
-.splitHeading > p { font-size: clamp(18px, 1.4vw, 23px); }
-.contextStack button > span { font-size: 13px; }
-.contextStack button b { font-size: clamp(21px, 1.55vw, 27px); }
-.contextStack button small { font-size: 16px; }
-.contextStack button > i { font-size: 11px; }
-.contextCode > div { font-size: 12px; }
-.contextCode code { font-size: 16px; }
-.contextCode > p { font-size: 16px; }
-.stepButton { font-size: 13px; }
-.toolStep > span, .toolStep small { font-size: 11px; }
-.toolStep b { font-size: clamp(17px, 1.25vw, 21px); }
-.evidenceTop { font-size: 12px; }
-.toolEvidence > strong { font-size: 14px; }
-.toolEvidence > code { font-size: clamp(15px, 1.2vw, 19px); }
-.toolEvidence > p { font-size: clamp(17px, 1.25vw, 21px); }
-.messageGrowth b { font-size: 12px; }
-.transportTabs button { font-size: 15px; }
-.transportTabs button span { font-size: 12px; }
-.streamOutput > span, .streamViz > strong { font-size: 13px; }
-.eventRail b { font-size: 14px; }
-.compactViz span { font-size: 13px; }
-.compactViz small { font-size: 16px; }
-.stopCenter { font-size: 15px; }
-.stopContinue span, .stopFinish span { font-size: 14px; }
-.cacheToggle, .orderButton, .delegateButton { font-size: 13px; }
-.cacheRequest > span { font-size: 12px; }
-.stableBlock, .dynamicBlock { font-size: 14px; }
-.cacheLink b { font-size: 12px; }
-.cacheMetrics span { font-size: 12px; }
-.cacheMetrics small { font-size: 14px; }
-.orderSequence span { font-size: 12px; }
-.orderSequence b { font-size: clamp(14px, 1.1vw, 18px); }
-.prefixMeasure > span, .prefixMeasure strong { font-size: 11px; }
-.orderExplain p { font-size: clamp(17px, 1.3vw, 21px); }
-.memoryTabs span { font-size: 11px; }
-.memoryTabs b { font-size: clamp(21px, 1.85vw, 30px); }
-.memorySource > span, .memoryRequest > span { font-size: 12px; }
-.memorySource code { font-size: 16px; }
-.memorySource p { font-size: 17px; }
-.memoryArrow b { font-size: 11px; }
-.memoryRequest code { font-size: 15px; }
-.mainAgent span, .childAgents span, .subagentEvidence > span { font-size: 12px; }
-.mainAgent small, .childAgents small { font-size: 15px; }
-.childAgents b { font-size: 20px; }
-.subagentEvidence > div b { font-size: 14px; }
-.subagentEvidence code, .subagentEvidence p { font-size: 14px; }
-.finalModel span, .finalHarness span { font-size: 11px; }
-.finalModel b, .finalHarness b { font-size: clamp(16px, 1.35vw, 21px); }
-.finalFlow { font-size: 12px; }
-.finalActions a, .finalActions button { font-size: 13px; }
+/* 16:9 projection scale: enlarge supporting copy while preserving headline hierarchy. */
+.wordmark span { font-size: 16px; }
+.wordmark b { font-size: 14px; }
+.counter { font-size: 15px; }
+.scriptHeader span { font-size: 13px; }
+.scriptHeader b, .scriptTitle > span, .scriptFooter button { font-size: 12px; }
+.scriptTitle h2 { font-size: clamp(31px, 2.8vw, 44px); }
+.scriptBody p { font-size: clamp(18px, 2.4vh, 26px); }
+.rail span { font-size: 13px; }
+.rail b { font-size: 14px; }
+.eyebrow { font-size: clamp(16px, 1vw, 19px); }
+.subtitle { font-size: clamp(26px, 2vw, 34px); }
+.sendButton { min-width: 270px; font-size: 16px; }
+.signal { font-size: 14px; }
+.panelIndex { font-size: 16px; }
+.modelPanel small, .harnessPanel small { font-size: 15px; }
+.modelPanel li, .harnessPanel li { font-size: clamp(19px, 1.3vw, 23px); }
+.bridge span { font-size: 14px; }
+.focusNote span { font-size: 15px; }
+.focusNote p { font-size: clamp(20px, 1.5vw, 26px); }
+.loopHeader p { font-size: clamp(21px, 1.65vw, 27px); }
+.loopNode span { font-size: 15px; }
+.loopNode small { font-size: 18px; }
+.loopTrigger, .traceLabel { font-size: 15px; }
+.tracePanel li i { font-size: 14px; }
+.tracePanel li code { font-size: 17px; }
+.tracePanel p { font-size: 18px; }
+.splitHeading > p { font-size: clamp(20px, 1.55vw, 26px); }
+.contextStack button > span { font-size: 15px; }
+.contextStack button b { font-size: clamp(23px, 1.65vw, 30px); }
+.contextStack button small { font-size: 18px; }
+.contextStack button > i { font-size: 13px; }
+.contextCode > div { font-size: 14px; }
+.contextCode code { font-size: 18px; }
+.contextCode > p { font-size: 18px; }
+.stepButton { font-size: 15px; }
+.toolStep > span, .toolStep small { font-size: 13px; }
+.toolStep b { font-size: clamp(19px, 1.35vw, 23px); }
+.evidenceTop { font-size: 14px; }
+.toolEvidence > strong { font-size: 16px; }
+.toolEvidence > code { font-size: clamp(17px, 1.3vw, 22px); }
+.toolEvidence > p { font-size: clamp(19px, 1.4vw, 24px); }
+.messageGrowth b { font-size: 14px; }
+.transportTabs button { font-size: 17px; }
+.transportTabs button span { font-size: 14px; }
+.streamOutput > span, .streamViz > strong { font-size: 15px; }
+.eventRail b { font-size: 16px; }
+.compactViz span { font-size: 15px; }
+.compactViz small { font-size: 18px; }
+.stopCenter { font-size: 17px; }
+.stopContinue span, .stopFinish span { font-size: 16px; }
+.cacheToggle, .orderButton, .delegateButton { font-size: 15px; }
+.cacheRequest > span { font-size: 14px; }
+.stableBlock, .dynamicBlock { font-size: 16px; }
+.cacheLink b { font-size: 14px; }
+.cacheMetrics span { font-size: 14px; }
+.cacheMetrics small { font-size: 16px; }
+.orderSequence span { font-size: 14px; }
+.orderSequence b { font-size: clamp(16px, 1.2vw, 20px); }
+.prefixMeasure > span, .prefixMeasure strong { font-size: 13px; }
+.orderExplain p { font-size: clamp(19px, 1.45vw, 24px); }
+.memoryTabs span { font-size: 13px; }
+.memoryTabs b { font-size: clamp(23px, 1.95vw, 33px); }
+.memorySource > span, .memoryRequest > span { font-size: 14px; }
+.memorySource code { font-size: 18px; }
+.memorySource p { font-size: 19px; }
+.memoryArrow b { font-size: 13px; }
+.memoryRequest code { font-size: 17px; }
+.mainAgent span, .childAgents span, .subagentEvidence > span { font-size: 14px; }
+.mainAgent small, .childAgents small { font-size: 17px; }
+.childAgents b { font-size: 22px; }
+.subagentEvidence > div b { font-size: 16px; }
+.subagentEvidence code, .subagentEvidence p { font-size: 16px; }
+.finalModel span, .finalHarness span { font-size: 13px; }
+.finalModel b, .finalHarness b { font-size: clamp(18px, 1.45vw, 24px); }
+.finalFlow { font-size: 14px; }
+.finalActions a, .finalActions button { font-size: 15px; }
 
 /* Type scale and roles from the deck design system. */
 .wordmark span { font-size: 14px; font-weight: 400; }
@@ -499,9 +503,9 @@
 .compactViz > p,
 .orderExplain p,
 .memorySource p,
-.subagentEvidence p {
+  .subagentEvidence p {
   font-family: var(--text);
-  font-size: clamp(15px, 2.15vh, 23px);
+  font-size: clamp(17px, 2.4vh, 26px);
   font-weight: 400;
   line-height: 1.55;
 }
@@ -514,12 +518,17 @@
 .memoryTabs button,
 .delegateButton,
 .finalActions a,
-.finalActions button {
+  .finalActions button {
   font-family: var(--display);
-  font-size: clamp(15px, 1.9vh, 20px);
+  font-size: clamp(17px, 2.1vh, 22px);
   font-weight: 500;
 }
-.finalFlow { font-family: var(--text); font-size: clamp(15px, 2.15vh, 23px); font-weight: 400; }
+.finalFlow { font-family: var(--text); font-size: clamp(17px, 2.4vh, 26px); font-weight: 400; }
+
+@media (min-width: 1200px) and (min-aspect-ratio: 16 / 10) {
+  .slideContent { padding-top: clamp(82px, 8.3vh, 104px); padding-bottom: clamp(48px, 4.8vh, 64px); }
+  .contextExperience { margin-top: clamp(26px, 3vh, 38px); }
+}
 
 @keyframes streamReveal { 0%,20%,100% { opacity: .22; } 35%,70% { opacity: 1; } }
 @keyframes eventBlink { 0%,18%,100% { background: var(--surface-muted); } 25%,50% { background: var(--accent-cyan); } }
