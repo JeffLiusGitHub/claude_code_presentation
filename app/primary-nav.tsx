@@ -12,11 +12,11 @@ export default function PrimaryNav({ brandHref = "/#top" }: PrimaryNavProps) {
         <b>LEARNING LAB</b>
       </a>
       <div className={styles.navLinks}>
-        <a href="/presentation">Presentation</a>
         <a href="/proxyman-guide">Proxyman How-to</a>
+        <a href="/field-validation">Workshop</a>
         <a href="/request-analyzer">Request Analyzer</a>
-        <a className={styles.navCta} href="/field-validation">
-          Workshop <span>↗</span>
+        <a className={styles.navCta} href="/presentation">
+          Presentation <span>↗</span>
         </a>
       </div>
     </nav>
