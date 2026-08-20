@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import PageNav from "../page-nav";
+import PrimaryNav from "../primary-nav";
 
 const title = "Proxyman Setup · Capture the Claude Agent Loop";
 const description =
@@ -61,16 +63,19 @@ const Step = ({
 export default function ProxymanGuide() {
   return (
     <main className="pmg-page">
-      <nav className="pmg-nav" aria-label="Proxyman workshop guide">
-        <a className="pmg-brand" href="#top">PROXYMAN / FIELD GUIDE</a>
-        <div>
-          <a href="#install">Install</a>
-          <a href="#configure">Configure</a>
-          <a href="#task">Run the task</a>
-          <a href="#trace">Read the trace</a>
-          <a className="pmg-back" href="/">Context Lab ↗</a>
-        </div>
-      </nav>
+      <PrimaryNav />
+      <PageNav
+        label="PROXYMAN"
+        detail="SETUP & CAPTURE GUIDE"
+        ariaLabel="Proxyman guide navigation"
+        items={[
+          { href: "#install", label: "Install" },
+          { href: "#configure", label: "Configure" },
+          { href: "#task", label: "Run the task" },
+          { href: "#trace", label: "Read the trace" },
+          { href: "/field-validation", label: "Workshop", cta: true },
+        ]}
+      />
 
       <header className="pmg-hero" id="top">
         <div className="pmg-hero-copy">
@@ -87,15 +92,15 @@ export default function ProxymanGuide() {
           </div>
         </div>
         <aside className="pmg-hero-card">
-          <span>WORKSHOP PATH</span>
-          <strong>15–20 min</strong>
+          <span>HOW TO INSTALL</span>
+          <strong>5-minute starter</strong>
           <ol>
-            <li><b>01</b> Get the official installer</li>
-            <li><b>02</b> Trust the local CA</li>
-            <li><b>03</b> Capture one Claude task</li>
-            <li><b>04</b> Explain two requests</li>
+            <li><a href="#install"><b>01</b><span>Get the official installer</span><i aria-hidden="true">↓</i></a></li>
+            <li><a href="#configure"><b>02</b><span>Trust the local CA</span><i aria-hidden="true">↓</i></a></li>
+            <li><a href="#task"><b>03</b><span>Run one Claude task</span><i aria-hidden="true">↓</i></a></li>
+            <li><a href="#trace"><b>04</b><span>Read the captured loop</span><i aria-hidden="true">↓</i></a></li>
           </ol>
-          <small>Recorded on Windows with Proxyman 3.17.0 and port 9090.</small>
+          <small>Jump to any step, or follow the guide from top to bottom.</small>
         </aside>
       </header>
 

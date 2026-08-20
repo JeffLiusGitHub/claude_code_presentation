@@ -12,9 +12,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = "Claude Context Learning Lab · 从 Presentation 到 Workshop";
+const title = "Claude Context Learning Lab · Presentation, Proxyman & Workshop";
 const description =
-  "先用互动 Presentation 看懂 Claude Code 请求，再用 Proxyman 检查真实流量，最后进入动手 Workshop。";
+  "Understand a Claude Code request in the interactive presentation, inspect it with Proxyman, then validate it in the hands-on workshop.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -35,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

@@ -2,7 +2,7 @@
 
 这是 Agent Context Lab 与《What Happens After You Press Send in Claude Code?》互动演示的本地项目。
 
-首页是一条四步学习路线：认识工具、打开 11 页互动 Presentation、完成 Proxyman How-to，然后进入实际 Workshop。原 Agent Context Lab 的完整内容已保留在 `/workshop`，其中包含脱敏的 Proxyman 请求/响应样例与 Token Analyzer。所有内容都在本机运行；启动后不需要登录线上网站。
+英文首页是一条四步学习路线：认识工具、打开 11 页互动 Presentation、完成 Proxyman How-to，然后进入实际 Workshop。Workshop 的现有地址仍为 `/field-validation`，原 Agent Context Lab 参考内容保留在 `/workshop`。所有内容都在本机运行；启动后不需要登录线上网站。
 
 ## 最简单的打开方式
 
@@ -30,7 +30,8 @@ npm run local
 
 - Presentation：`http://localhost:3000/presentation`
 - Proxyman How-to：`http://localhost:3000/proxyman-guide`
-- 实际 Workshop：`http://localhost:3000/workshop#workshop`
+- 实际 Workshop：`http://localhost:3000/field-validation`
+- Context Lab 参考内容：`http://localhost:3000/workshop`
 
 ## 演示控制
 
@@ -43,7 +44,8 @@ npm run local
 
 - `app/page.tsx`：四步学习路线首页
 - `app/home.module.css`：首页视觉、色板与响应式布局
-- `app/workshop/page.tsx`：原 Agent Context Lab 与实际 Workshop
+- `app/field-validation/page.tsx`：实际 Workshop（保留旧地址以兼容现有链接）
+- `app/workshop/page.tsx`：原 Agent Context Lab 参考内容
 - `app/interactive-presentation.tsx`：新版 11 页演示内容与交互
 - `app/presentation/page.tsx`：新版演示入口
 - `app/presentation.module.css`：演示视觉、动画和响应式布局

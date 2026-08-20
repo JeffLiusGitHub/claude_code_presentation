@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import PageNav from "../page-nav";
+import PrimaryNav from "../primary-nav";
 import styles from "./validation.module.css";
 
 export const metadata: Metadata = {
-  title: "Proxyman Field Validation Task Sheet",
+  title: "Claude Traffic Workshop",
   description:
-    "Three concise, read-only tasks for validating the Claude Code agent loop, prompt cache, streaming, and subagents in Proxyman.",
+    "A 20-minute hands-on workshop for inspecting the Claude Code agent loop, prompt cache, streaming, and subagents in Proxyman.",
 };
 
 const taskOnePrompt = `[TRAFFIC-DEMO-01] This is a read-only validation task. First use Bash to print the current working directory, then use Glob to list no more than 10 files or folders in the current directory, and finally summarize what you saw in one sentence. Do not create, modify, or delete any files.`;
@@ -22,23 +25,27 @@ function ShortList({ children }: { children: string[] }) {
   );
 }
 
-export default function FieldValidationPage() {
+export default function WorkshopPage() {
   return (
     <main className={styles.page} lang="en">
-      <nav className={styles.nav} aria-label="Field validation navigation">
-        <a className={styles.brand} href="/">CLAUDE CODE <span>FIELD LAB</span></a>
-        <div>
-          <a href="#tasks">Tasks</a>
-          <a href="#timing">Timing</a>
-          <a href="#before-start">Before you start</a>
-          <a className={styles.navCta} href="/presentation">Request Anatomy ↗</a>
-        </div>
-      </nav>
+      <PrimaryNav />
 
-      <header className={styles.intro}>
+      <PageNav
+        label="WORKSHOP"
+        detail="PROXYMAN TRAFFIC LAB"
+        ariaLabel="Workshop navigation"
+        items={[
+          { href: "#tasks", label: "Tasks" },
+          { href: "#timing", label: "Timing" },
+          { href: "#before-start", label: "Before you start" },
+          { href: "/presentation", label: "Request Anatomy", cta: true },
+        ]}
+      />
+
+      <header className={styles.intro} id="top">
         <div className={styles.introMain}>
-          <p className={styles.eyebrow}>PROXYMAN · FIELD VALIDATION · 20 MIN</p>
-          <h1>Proxyman Field Validation Task Sheet</h1>
+          <p className={styles.eyebrow}>PROXYMAN · HANDS-ON WORKSHOP · 20 MIN</p>
+          <h1>Claude Traffic Workshop</h1>
           <div className={styles.introCopy}>
             <p>
               The next section is hands-on. By the end of the exercise,
@@ -77,7 +84,7 @@ export default function FieldValidationPage() {
         <div className={styles.sectionHead}>
           <div>
             <p className={styles.kicker}>TASKS 01–03</p>
-            <h2 id="tasks-title">Validation tasks</h2>
+            <h2 id="tasks-title">Workshop tasks</h2>
           </div>
           <p>Keep Proxyman open beside Claude Code. Match each visible action to the traffic.</p>
         </div>
@@ -199,6 +206,9 @@ export default function FieldValidationPage() {
             <p className={styles.kicker}>BEFORE YOU START</p>
             <h2 id="before-title">Prepare and protect</h2>
           </div>
+          <a className={styles.setupGuideLink} href="/proxyman-guide">
+            How to set up Proxyman <span aria-hidden="true">↗</span>
+          </a>
         </div>
 
         <table className={styles.simpleTable}>
@@ -213,29 +223,10 @@ export default function FieldValidationPage() {
         </table>
       </section>
 
-      <section className={`${styles.section} ${styles.recordSection}`} aria-labelledby="record-title">
-        <div className={styles.sectionHead}>
-          <div>
-            <p className={styles.kicker}>QUICK RECORD</p>
-            <h2 id="record-title">Capture the result</h2>
-          </div>
-          <p>Use one line per task during the debrief.</p>
-        </div>
-
-        <table className={styles.recordTable}>
-          <thead><tr><th>Task</th><th>Status</th><th>Evidence / flow IDs</th></tr></thead>
-          <tbody>
-            <tr><td>01 · Agent Loop</td><td>Pass / Not observed</td><td /></tr>
-            <tr><td>02 · Prompt Cache</td><td>Pass / Not observed</td><td /></tr>
-            <tr><td>03 · Subagents</td><td>Pass / Not observed</td><td /></tr>
-          </tbody>
-        </table>
-      </section>
-
       <footer className={styles.footer}>
-        <b>PROXYMAN FIELD VALIDATION</b>
+        <b>CLAUDE TRAFFIC WORKSHOP</b>
         <div>
-          <a href="/">Context Lab</a>
+          <Link href="/">Context Lab</Link>
           <a href="/proxyman-guide">Setup Guide</a>
           <a href="/presentation">Request Anatomy</a>
         </div>

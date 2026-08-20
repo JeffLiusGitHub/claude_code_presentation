@@ -8,8 +8,11 @@
   --sky: #3a6998;
   --clay: #d37c4f;
   --sun: #e2b84f;
+  --muted: #c5b6a6;
   --ink-muted: #675b52;
+  --font-mono: "SFMono-Regular", "SF Mono", var(--font-geist-mono), "Cascadia Code", Consolas, monospace;
   min-height: 100vh;
+  overflow: visible;
   background: var(--paper);
   color: var(--night);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", var(--font-geist-sans), "Segoe UI", sans-serif;
@@ -19,40 +22,13 @@
 .page h1, .page h2, .page p, .page dl, .page dd, .page pre, .page ul { margin-top: 0; }
 .page a { color: inherit; text-decoration: none; }
 
-.nav,
 .eyebrow,
 .kicker,
-.brand,
-.nav a,
 .taskNumber,
 .summary > p,
 .footer {
   font-family: "SFMono-Regular", "SF Mono", var(--font-geist-mono), "Cascadia Code", Consolas, monospace;
 }
-
-.nav {
-  position: sticky;
-  z-index: 20;
-  top: 0;
-  display: flex;
-  min-height: 68px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 0 5vw;
-  border-bottom: 1px solid rgba(169, 206, 226, .2);
-  background: rgba(41, 38, 34, .96);
-  color: var(--paper);
-  backdrop-filter: blur(14px);
-}
-
-.brand { font-size: 12px; font-weight: 900; letter-spacing: .08em; }
-.brand span { margin-left: 8px; padding: 6px 8px; border: 1px solid rgba(247, 231, 210, .5); }
-.nav > div { display: flex; align-items: center; gap: clamp(14px, 2vw, 28px); }
-.nav a { font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
-.nav > div a:hover { color: var(--sun); }
-.nav .navCta { padding: 10px 13px; border: 1px solid var(--accent-cyan); color: var(--accent-cyan); }
-.nav .navCta:hover { background: var(--accent-cyan); color: var(--night); }
 
 .intro {
   display: grid;
@@ -65,6 +41,7 @@
     linear-gradient(rgba(41, 38, 34, .035) 1px, transparent 1px),
     var(--paper);
   background-size: 100% 46px;
+  scroll-margin-top: 68px;
 }
 
 .eyebrow, .kicker { margin-bottom: 18px; color: var(--sky); font-size: 10px; font-weight: 900; letter-spacing: .11em; }
@@ -81,7 +58,7 @@
 .summary dt { color: var(--ink-muted); font-size: 13px; }
 .summary dd { font-weight: 800; text-align: right; }
 
-.section { padding: clamp(72px, 7vw, 106px) 5vw; border-bottom: 1px solid var(--night); background: var(--paper); }
+.section { padding: clamp(72px, 7vw, 106px) 5vw; border-bottom: 1px solid var(--night); background: var(--paper); scroll-margin-top: 68px; }
 .sectionHead { display: flex; align-items: end; justify-content: space-between; gap: 40px; margin-bottom: 36px; }
 .sectionHead h2 { margin-bottom: 0; font-size: clamp(38px, 4.3vw, 66px); letter-spacing: -.055em; line-height: 1; }
 .sectionHead > p { max-width: 520px; margin-bottom: 3px; color: var(--ink-muted); font-size: 16px; line-height: 1.55; }
@@ -114,13 +91,34 @@
 .timingSection { background: var(--accent-indigo); }
 .beforeStart { background: var(--night-2); color: var(--paper); }
 .beforeStart .kicker { color: var(--accent-cyan); }
-.recordSection { background: var(--sand-soft); }
 
-.simpleTable, .recordTable { width: 100%; border: 2px solid currentColor; border-collapse: collapse; table-layout: fixed; }
-.simpleTable th, .simpleTable td, .recordTable th, .recordTable td { padding: 18px 22px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; text-align: left; }
-.simpleTable th:last-child, .simpleTable td:last-child, .recordTable th:last-child, .recordTable td:last-child { border-right: 0; }
-.simpleTable tbody tr:last-child td, .recordTable tbody tr:last-child td { border-bottom: 0; }
-.simpleTable thead th, .recordTable thead th { background: var(--night); color: var(--accent-cyan); font: 900 10px/1.2 "SFMono-Regular", var(--font-geist-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
+.setupGuideLink {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 16px;
+  padding: 0 18px;
+  border: 1px solid var(--accent-cyan);
+  background: var(--accent-cyan);
+  color: var(--night);
+  font: 900 10px/1 var(--font-mono);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  transition: background-color .18s ease, border-color .18s ease;
+}
+
+.setupGuideLink:hover {
+  border-color: var(--accent-indigo);
+  background: var(--accent-indigo);
+}
+
+.setupGuideLink span { font-size: 16px; }
+
+.simpleTable { width: 100%; border: 2px solid currentColor; border-collapse: collapse; table-layout: fixed; }
+.simpleTable th, .simpleTable td { padding: 18px 22px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; text-align: left; }
+.simpleTable th:last-child, .simpleTable td:last-child { border-right: 0; }
+.simpleTable tbody tr:last-child td { border-bottom: 0; }
+.simpleTable thead th { background: var(--night); color: var(--accent-cyan); font: 900 10px/1.2 "SFMono-Regular", var(--font-geist-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
 .simpleTable th:first-child { width: 64%; }
 .simpleTable td:last-child { font-weight: 800; }
 .totalRow { background: var(--night); color: var(--paper); }
@@ -129,9 +127,6 @@
 .beforeStart .simpleTable th:first-child { width: 25%; }
 .beforeStart .simpleTable thead th { background: var(--accent-cyan); color: var(--night); }
 .warningRow { background: var(--clay); color: var(--night); }
-.recordTable th:nth-child(1) { width: 25%; }
-.recordTable th:nth-child(2) { width: 26%; }
-.recordTable tbody td:last-child { height: 62px; background: rgba(255, 255, 255, .35); }
 
 .footer { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 30px 5vw; background: var(--night); color: var(--paper); }
 .footer b { color: var(--accent-cyan); font-size: 10px; letter-spacing: .1em; }
@@ -150,15 +145,12 @@
 }
 
 @media (max-width: 700px) {
-  .nav { position: relative; padding-block: 18px; }
-  .nav > div { display: none; }
   .intro, .section { padding-inline: 22px; }
   .intro h1 { font-size: 48px; }
   .introCopy p { font-size: 16px; }
   .sectionHead h2 { font-size: 41px; }
-  .simpleTable, .recordTable { table-layout: auto; }
-  .simpleTable th, .simpleTable td, .recordTable th, .recordTable td { padding: 15px 13px; font-size: 13px; }
-  .recordTable th:nth-child(1), .recordTable th:nth-child(2) { width: auto; }
+  .simpleTable { table-layout: auto; }
+  .simpleTable th, .simpleTable td { padding: 15px 13px; font-size: 13px; }
   .footer { align-items: flex-start; flex-direction: column; }
   .footer > div { flex-wrap: wrap; }
 }

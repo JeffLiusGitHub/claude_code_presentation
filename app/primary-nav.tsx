@@ -1,0 +1,24 @@
+import styles from "./home.module.css";
+
+type PrimaryNavProps = {
+  brandHref?: string;
+};
+
+export default function PrimaryNav({ brandHref = "/#top" }: PrimaryNavProps) {
+  return (
+    <nav className={styles.nav} aria-label="Primary navigation">
+      <a className={styles.brand} href={brandHref} aria-label="Back to homepage">
+        <span>CLAUDE / CONTEXT</span>
+        <b>LEARNING LAB</b>
+      </a>
+      <div className={styles.navLinks}>
+        <a href="/presentation">Presentation</a>
+        <a href="/proxyman-guide">Proxyman How-to</a>
+        <a href="/request-analyzer">Request Analyzer</a>
+        <a className={styles.navCta} href="/field-validation">
+          Workshop <span>↗</span>
+        </a>
+      </div>
+    </nav>
+  );
+}

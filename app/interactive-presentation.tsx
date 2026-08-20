@@ -70,6 +70,8 @@ export default function InteractivePresentation() {
     slideRefs.current[next]?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
+  /* Slide changes intentionally reset each visual demo before scheduling its animation. */
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const slides = slideRefs.current.filter(Boolean) as HTMLElement[];
     const observer = new IntersectionObserver(
@@ -208,6 +210,7 @@ export default function InteractivePresentation() {
       intervals.forEach((timer) => window.clearInterval(timer));
     };
   }, [activeSlide]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   function sendRequest() {
     setSent(false);
