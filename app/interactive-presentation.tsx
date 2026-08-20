@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./presentation.module.css";
+import { speakerScripts } from "./presentation-script";
 
 const slideLabels = [
   "Press Send",
@@ -54,6 +55,7 @@ export default function InteractivePresentation() {
   const slideRefs = useRef<(HTMLElement | null)[]>([]);
   const [activeSlide, setActiveSlide] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isScriptOpen, setIsScriptOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [focus, setFocus] = useState<"model" | "harness">("model");
   const [loopStep, setLoopStep] = useState(0);
@@ -91,7 +93,18 @@ export default function InteractivePresentation() {
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       const target = event.target as HTMLElement | null;
+      if (event.key === "Escape" && isScriptOpen) {
+        event.preventDefault();
+        setIsScriptOpen(false);
+        return;
+      }
+      if (target?.closest("[data-speaker-script]")) return;
       if (target?.tagName === "BUTTON" && (event.key === " " || event.key === "Enter")) return;
+      if (event.key.toLowerCase() === "s" && !event.altKey && !event.ctrlKey && !event.metaKey) {
+        event.preventDefault();
+        setIsScriptOpen((current) => !current);
+        return;
+      }
       if (["ArrowDown", "PageDown", " "].includes(event.key)) {
         event.preventDefault();
         goToSlide(activeSlide + 1);
@@ -105,7 +118,7 @@ export default function InteractivePresentation() {
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeSlide, goToSlide]);
+  }, [activeSlide, goToSlide, isScriptOpen]);
 
   useEffect(() => {
     function onFullscreenChange() {
@@ -249,11 +262,47 @@ export default function InteractivePresentation() {
           </button>
         </div>
         <div className={styles.headerMeta}>
+          <button
+            className={`${styles.scriptButton} ${isScriptOpen ? styles.scriptButtonActive : ""}`}
+            onClick={() => setIsScriptOpen((current) => !current)}
+            aria-label={isScriptOpen ? "Hide speaker script" : "Show speaker script"}
+            aria-expanded={isScriptOpen}
+            aria-controls="speaker-script-panel"
+            title="Speaker script (S)"
+          >
+            <span>SCRIPT</span><kbd>S</kbd>
+          </button>
           <div className={styles.counter} aria-live="polite">
             <span>{String(activeSlide + 1).padStart(2, "0")}</span><i /><span>{String(slideLabels.length).padStart(2, "0")}</span>
           </div>
         </div>
       </header>
+
+      {isScriptOpen && (
+        <div className={styles.scriptLayer} data-speaker-script>
+          <button className={styles.scriptBackdrop} onClick={() => setIsScriptOpen(false)} aria-label="Close speaker script" />
+          <aside className={styles.scriptPanel} id="speaker-script-panel" aria-label={`Speaker script for slide ${activeSlide + 1}`}>
+            <header className={styles.scriptHeader}>
+              <div>
+                <span>SPEAKER SCRIPT</span>
+                <b>{String(activeSlide + 1).padStart(2, "0")} / {String(slideLabels.length).padStart(2, "0")}</b>
+              </div>
+              <button onClick={() => setIsScriptOpen(false)} aria-label="Close speaker script">×</button>
+            </header>
+            <div className={styles.scriptTitle}>
+              <span>{speakerScripts[activeSlide].section}</span>
+              <h2>{speakerScripts[activeSlide].title}</h2>
+            </div>
+            <div className={styles.scriptBody} role="region" aria-label="Current slide speaker script">
+              <p>{speakerScripts[activeSlide].script}</p>
+            </div>
+            <footer className={styles.scriptFooter}>
+              <button onClick={() => goToSlide(activeSlide - 1)} disabled={activeSlide === 0}><span>↑</span> PREVIOUS</button>
+              <button onClick={() => goToSlide(activeSlide + 1)} disabled={activeSlide === slideLabels.length - 1}>NEXT <span>↓</span></button>
+            </footer>
+          </aside>
+        </div>
+      )}
 
       <nav className={styles.rail} aria-label="Slides">
         {slideLabels.map((label, index) => (

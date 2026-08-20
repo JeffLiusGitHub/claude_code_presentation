@@ -43,9 +43,33 @@
 .wordmark span, .wordmark b, .counter, .eyebrow, .panelIndex, .modelPanel small, .harnessPanel small, .traceLabel { font-family: var(--font-mono); letter-spacing: 0.1em; }
 .wordmark span { font-size: 12px; font-weight: 900; }
 .wordmark b { padding: 6px 8px; border: 1px solid currentColor; font-size: 9px; }
-.headerMeta { display: flex; align-items: center; gap: 20px; pointer-events: none; }
+.headerMeta { display: flex; align-items: center; gap: 20px; pointer-events: auto; }
+.scriptButton { display: flex; min-height: 34px; align-items: center; gap: 10px; padding: 0 7px 0 12px; border: 1px solid rgba(255,255,255,.72); background: transparent; color: white; cursor: pointer; font: 900 9px/1 var(--font-mono); letter-spacing: .1em; transition: background 160ms ease, color 160ms ease; }
+.scriptButton kbd { display: grid; min-width: 20px; height: 20px; place-items: center; border: 1px solid currentColor; background: transparent; font: inherit; }
+.scriptButton:hover, .scriptButtonActive { background: white; color: var(--night); }
 .counter { display: flex; align-items: center; gap: 9px; color: white; font-size: 11px; font-weight: 800; }
 .counter i { width: 36px; height: 1px; background: currentColor; }
+.scriptLayer { position: fixed; z-index: 80; inset: 0; color: var(--night); isolation: isolate; }
+.scriptBackdrop { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; background: rgba(var(--night-rgb),.52); cursor: pointer; backdrop-filter: blur(4px); }
+.scriptPanel { position: absolute; z-index: 1; top: 0; right: 0; display: grid; width: min(640px, calc(100vw - 72px)); height: 100%; grid-template-rows: auto auto minmax(0,1fr) auto; border-left: 2px solid var(--night); background: var(--paper); box-shadow: -18px 0 55px rgba(var(--night-rgb),.32); animation: scriptEnter 260ms cubic-bezier(.22,1,.36,1); }
+.scriptHeader { display: flex; min-height: 78px; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid rgba(var(--night-rgb),.3); background: var(--night); color: var(--paper); }
+.scriptHeader > div { display: flex; align-items: center; gap: 16px; }
+.scriptHeader span, .scriptHeader b, .scriptTitle > span, .scriptFooter button { font-family: var(--font-mono); letter-spacing: .09em; }
+.scriptHeader span { color: var(--accent-cyan); font-size: 11px; font-weight: 900; }
+.scriptHeader b { color: var(--muted); font-size: 10px; }
+.scriptHeader > button { display: grid; width: 38px; height: 38px; place-items: center; padding: 0; border: 1px solid rgba(247,231,210,.48); background: transparent; color: var(--paper); cursor: pointer; font-size: 25px; line-height: 1; transition: background 160ms ease, color 160ms ease; }
+.scriptHeader > button:hover { background: var(--accent-indigo); color: var(--night); }
+.scriptTitle { padding: 24px 34px 21px; border-bottom: 1px solid rgba(var(--night-rgb),.22); background: var(--sand-soft); }
+.scriptTitle > span { color: var(--clay); font-size: 10px; font-weight: 900; text-transform: uppercase; }
+.scriptTitle h2 { margin: 8px 0 0; font-size: clamp(27px,2.5vw,39px); letter-spacing: -.045em; line-height: 1; }
+.scriptBody { overflow-y: auto; padding: 31px 36px 46px; outline: none; scrollbar-color: var(--clay) transparent; scrollbar-width: thin; }
+.scriptBody p { margin: 0; color: var(--night-2); font-size: clamp(17px,1.25vw,20px); line-height: 1.72; white-space: pre-wrap; }
+.scriptFooter { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--night); background: var(--surface-muted); }
+.scriptFooter button { display: flex; min-height: 62px; align-items: center; justify-content: space-between; padding: 0 24px; border: 0; border-right: 1px solid var(--night); background: transparent; color: var(--night); cursor: pointer; font-size: 10px; font-weight: 900; }
+.scriptFooter button:last-child { border-right: 0; }
+.scriptFooter button:hover:not(:disabled) { background: var(--accent-cyan); }
+.scriptFooter button:disabled { cursor: not-allowed; opacity: .35; }
+.scriptFooter span { font-size: 18px; }
 .rail { position: fixed; z-index: 40; top: 50%; left: 0; display: grid; width: max-content; gap: 4px; padding: 10px 12px; opacity: .46; filter: saturate(.28); isolation: isolate; transform: translateY(-50%); transition: opacity 220ms ease, filter 220ms ease; }
 .rail::before { position: absolute; z-index: -1; inset: 0; border: 1px solid rgba(255,255,255,.12); background: rgba(var(--night-rgb),.44); box-shadow: 0 8px 24px rgba(var(--night-rgb),.1); backdrop-filter: blur(12px); content: ""; transform: translateX(-52px); transition: background 220ms ease, box-shadow 220ms ease, transform 280ms cubic-bezier(.22,1,.36,1); }
 .rail button { display: grid; grid-template-columns: 25px 20px auto; gap: 7px; align-items: center; min-height: 26px; padding: 0; border: 0; background: transparent; color: rgba(255,255,255,.52); cursor: pointer; text-align: left; transform: translateX(-52px); transition: color 180ms ease, transform 280ms cubic-bezier(.22,1,.36,1); }
@@ -454,6 +478,7 @@
 @keyframes signalMove { 0% { transform: translateX(-110%); } 100% { transform: translateX(110%); } }
 @keyframes packetRight { 0%,35% { transform: translateX(-25px); opacity: .35; } 65%,100% { transform: translateX(25px); opacity: 1; } }
 @keyframes packetLeft { 0%,35% { transform: translateX(25px); opacity: .35; } 65%,100% { transform: translateX(-25px); opacity: 1; } }
+@keyframes scriptEnter { from { opacity: 0; transform: translateX(44px); } to { opacity: 1; transform: translateX(0); } }
 @media (max-width: 900px) {
   .slideContent { width: calc(100% - 96px); margin-right: 24px; margin-left: 72px; padding-top: 100px; }
   .rail { left: 0; }
@@ -486,6 +511,14 @@
   .headerStart { gap: 9px; }
   .homeButton { width: 36px; height: 34px; font-size: 18px; }
   .wordmark b { display: none; }
+  .scriptButton { padding-left: 8px; }
+  .scriptButton > span { display: none; }
+  .scriptPanel { width: 100vw; }
+  .scriptHeader { min-height: 68px; padding: 14px 16px; }
+  .scriptTitle { padding: 20px 22px 17px; }
+  .scriptBody { padding: 25px 24px 38px; }
+  .scriptBody p { font-size: 16px; line-height: 1.67; }
+  .scriptFooter button { min-height: 56px; padding: 0 18px; }
   .arrowControls { right: 16px; bottom: 16px; }
   .hero h1 { font-size: clamp(52px,15vw,80px); }
   .subtitle { max-width: 290px; }
@@ -610,4 +643,5 @@
   .heroOrb, .loopTrack i, .requestPacket, .resultPacket, .streamOutput i, .eventRail b, .finalBackdrop i { animation: none; }
   .signalActive i::after, .sendButton.sent i { animation-duration: 1ms; }
   .progress i, .modelPanel, .harnessPanel, .loopNode, .rail, .rail::before, .rail button, .rail b { transition: none; }
+  .scriptPanel { animation: none; }
 }
