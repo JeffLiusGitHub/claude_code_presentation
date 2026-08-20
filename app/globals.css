@@ -2461,7 +2461,7 @@ footer > a {
 .pmg-step { border-top: 0; border-bottom: 1px solid var(--pmg-navy); }
 .pmg-step-number { color: var(--pmg-clay); }
 .pmg-step p { color: var(--pmg-muted); }
-.pmg-install-evidence { display: grid; grid-template-columns: 1.4fr .6fr; gap: 16px; align-items: start; }
+.pmg-install-evidence { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
 
 .pmg-evidence { margin: 0; }
 .pmg-evidence-frame {

@@ -162,11 +162,6 @@ export default function ProxymanGuide() {
               alt="Official Proxyman 3.17.0 GitHub release page with Windows installer asset"
               caption="Evidence 01 · The installer comes from ProxymanApp's official release page."
             />
-            <Evidence
-              src="/proxyman-evidence/04-installer-running.jpg"
-              alt="Proxyman installer running on Windows"
-              caption="Evidence 02 · The Windows setup wizard is running."
-            />
           </div>
         </div>
 
@@ -202,7 +197,7 @@ export default function ProxymanGuide() {
             <Evidence
               src="/proxyman-evidence/05-proxyman-listening-9090.jpg"
               alt="Proxyman manual setup showing listening port 9090"
-              caption="Evidence 03 · The local proxy is listening on port 9090."
+              caption="Evidence 02 · The local proxy is listening on port 9090."
             />
           </article>
 
@@ -220,7 +215,7 @@ export default function ProxymanGuide() {
             <Evidence
               src="/proxyman-evidence/06-certificate-installed-trusted.jpg"
               alt="Proxyman certificate panel showing Installed and Trusted"
-              caption="Evidence 04 · Windows trusts the Proxyman root certificate."
+              caption="Evidence 03 · Windows trusts the Proxyman root certificate."
             />
           </article>
 
@@ -238,7 +233,7 @@ export default function ProxymanGuide() {
             <Evidence
               src="/proxyman-evidence/07-ssl-proxying-api-anthropic.jpg"
               alt="Proxyman SSL Proxying list with api.anthropic.com enabled"
-              caption="Evidence 05 · SSL Proxying is enabled for api.anthropic.com."
+              caption="Evidence 04 · SSL Proxying is enabled for api.anthropic.com."
             />
           </article>
         </div>
@@ -281,7 +276,7 @@ export default function ProxymanGuide() {
         <Evidence
           src="/proxyman-evidence/08-claude-task-result-en.png"
           alt="Claude completing the validation task with Bash and Glob"
-          caption="Evidence 06 · Claude ran the requested tools and returned a one-sentence summary."
+          caption="Evidence 05 · Claude ran the requested tools and returned a one-sentence summary."
           wide
         />
 
@@ -330,12 +325,12 @@ export default function ProxymanGuide() {
             <Evidence
               src="/proxyman-evidence/09-proxyman-tool-use-bash-glob.jpg"
               alt="Proxyman response showing Bash and Glob tool_use blocks"
-              caption="Evidence 07 · Two tool requests appear in the response stream."
+              caption="Evidence 06 · Two tool requests appear in the response stream."
             />
             <Evidence
               src="/proxyman-evidence/10-stop-reason-tool-use-cache.jpg"
               alt="Proxyman response showing stop_reason tool_use and cache token counts"
-              caption="Evidence 08 · The response pauses for tools and reports cache usage."
+              caption="Evidence 07 · The response pauses for tools and reports cache usage."
             />
           </div>
         </article>
@@ -357,7 +352,7 @@ export default function ProxymanGuide() {
           <Evidence
             src="/proxyman-evidence/11-tool-result-end-turn.jpg"
             alt="Proxyman request showing tool results and response showing end_turn"
-            caption="Evidence 09 · Tool results return in the request; the response finishes the turn."
+            caption="Evidence 08 · Tool results return in the request; the response finishes the turn."
           />
         </article>
 
