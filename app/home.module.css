@@ -143,6 +143,7 @@
 .sectionIndex,
 .cardTop,
 .readyLabel,
+.analyzerLabel,
 .mapHeader,
 .mapFooter,
 .phaseList time,
@@ -232,12 +233,6 @@
 .pathCard > a span { font-size: 20px; transition: transform 180ms ease; }
 .pathCard > a:hover span { transform: translate(4px, -4px); }
 
-.aboutCard { background: var(--accent-cyan); }
-.cardGlyph { display: flex; height: 84px; align-items: center; margin-top: 45px; }
-.cardGlyph i { position: relative; display: block; height: 42px; flex: 1; border: 2px solid var(--night); border-radius: 50%; }
-.cardGlyph i + i { margin-left: -18px; }
-.cardGlyph i:nth-child(2) { height: 70px; background: var(--paper); }
-.cardGlyph i:nth-child(3) { background: var(--accent-indigo); }
 .presentationCard { background: var(--accent-indigo); }
 .presentationCard ul { display: grid; gap: 12px; margin: 28px 0 0; padding: 0; list-style: none; }
 .presentationCard li { display: grid; grid-template-columns: 18px 1fr; color: #4c433d; font-size: 15px; line-height: 1.5; }
@@ -250,7 +245,11 @@
 .proxySignal strong { border-color: var(--accent-cyan); background: var(--accent-cyan); color: var(--night); }
 .proxySignal i { color: var(--accent-indigo); font-style: normal; font-size: 20px; }
 .workshopCard { background: var(--surface-muted); }
-.readyLabel { display: inline-flex; width: fit-content; margin-top: 70px; padding: 9px 11px; background: var(--sun); font-size: 9px; font-weight: 900; letter-spacing: .09em; }
+.analyzerCard { background: var(--accent-cyan); }
+.readyLabel,
+.analyzerLabel { display: inline-flex; width: fit-content; margin-top: 70px; padding: 9px 11px; font-size: 9px; font-weight: 900; letter-spacing: .09em; }
+.readyLabel { background: var(--sun); }
+.analyzerLabel { border: 1px solid var(--night); background: var(--paper); }
 
 .workshopEntry {
   display: grid;

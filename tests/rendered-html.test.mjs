@@ -50,6 +50,13 @@ test("server-renders the fully English learning homepage and routes to Workshop"
   assert.match(html, /What does the Presentation cover/);
   assert.match(html, /Open the Proxyman How-to/);
   assert.match(html, /Enter the Workshop/);
+  assert.match(html, /See what fills the request/);
+  assert.match(html, /Open the Request Analyzer/);
+  assert.match(html, /use the Analyzer to see how prompts, tool definitions, messages, and cache usage shape the request/);
+  assert.doesNotMatch(html, /ABOUT THE TOOL|Review the tool introduction/);
+  assert.ok(html.indexOf("INTERACTIVE PRESENTATION") < html.indexOf("PROXYMAN HOW-TO"));
+  assert.ok(html.indexOf("PROXYMAN HOW-TO") < html.indexOf("HANDS-ON WORKSHOP"));
+  assert.ok(html.indexOf("HANDS-ON WORKSHOP") < html.indexOf("REQUEST ANALYZER"));
   assert.match(html, /href="\/presentation"/);
   assert.match(html, /href="\/proxyman-guide"/);
   assert.match(html, /href="\/request-analyzer"/);
