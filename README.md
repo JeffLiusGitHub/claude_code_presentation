@@ -1,86 +1,55 @@
-# Agent Context Lab
+# Claude Code Request Anatomy
 
-一套可直接用于演讲和 hands-on workshop 的中文网站，主题是：
+这是 Agent Context Lab 与《What Happens After You Press Send in Claude Code?》互动演示的本地项目。
 
-- Model 与 harness 的区别
-- system、tools、messages 如何组成 context
-- input、cache creation、cache read、output token
-- 对话增长与 prompt caching
-- primary thread 与 subagent fan-out
-- 如何用真实 Claude Desktop OTLP 流量验证，而不是靠 UI 猜测
+本地首页保留旧版 Agent Context Lab；顶部导航中的“互动演示”会打开新版 11 页全屏演示。项目包含脱敏的 Proxyman 请求/响应样例，以及点击、键盘、滚轮和触控交互。所有内容都在本机运行；启动后不需要登录线上网站。
 
-## 打开网站
+## 最简单的打开方式
+
+双击项目根目录中的：
+
+`启动本地演示.cmd`
+
+脚本会检查本地依赖；首次运行时如有需要会自动安装，然后启动网站。终端出现本地地址后，浏览器打开：
+
+`http://localhost:3000`
+
+关闭启动脚本的终端窗口即可停止网站。
+
+## 命令行启动
 
 需要 Node.js 22.13 或更新版本。
 
 ```powershell
+cd "C:\Projects\claude presentation\claude-context-workshop"
 npm install
-npm run dev
+npm run local
 ```
 
-浏览器打开 `http://localhost:3000`。
+然后打开 `http://localhost:3000`。新版互动演示的直接地址是 `http://localhost:3000/presentation`。
+
+## 演示控制
+
+- 鼠标滚轮或触控板：切换页面
+- `↑` / `↓`、`Page Up` / `Page Down`：上一页/下一页
+- `Home` / `End`：第一页/最后一页
+- 页面中的按钮和代码卡片：触发互动讲解
+
+## 项目结构
+
+- `app/page.tsx`：旧版 Agent Context Lab 首页
+- `app/interactive-presentation.tsx`：新版 11 页演示内容与交互
+- `app/presentation/page.tsx`：新版演示入口
+- `app/presentation.module.css`：演示视觉、动画和响应式布局
+- `app/proxyman-guide/`：Proxyman 安装与抓包指南
+- `public/og.png`：项目封面图
+- `tests/rendered-html.test.mjs`：渲染结果测试
+
+## 检查项目
 
 ```powershell
-npm run lint
 npm run build
+npm test
 ```
 
-## Token Analyzer
-
-网站底部的工具支持多文件拖放：
-
-- `.json`
-- `.jsonl`
-- `.har`
-- `.log`
-- `.txt`
-
-解析顺序：
-
-1. Anthropic/API 风格的 `usage`
-2. OTLP `claude_code.token.usage`
-3. `api_request_body` 中的 system / tools / messages
-4. 正则回退：`input_tokens`、`output_tokens`、`cache_creation_input_tokens`、`cache_read_input_tokens`
-
-所有解析都在浏览器本地执行，不上传文件。脱敏样例位于
-`public/data/workshop-sanitized.json`。
-
-## 本次 workshop 的安全观测方式
-
-推理路径保持：
-
-`Claude Desktop → IE Azure Gateway`
-
-观测路径临时增加：
-
-`Claude Desktop → OTLP http://127.0.0.1:8787`
-
-这不是 HTTPS MITM，本机 collector 不承载推理。内容捕获会包含 system
-prompt、tool schema、conversation 与潜在文件片段，因此只应用测试 prompt。
-
-工作区辅助脚本：
-
-```powershell
-& "C:\Projects\claude presentation\tools\configure-claude-workshop-capture.ps1" -Action Enable
-& "C:\Projects\claude presentation\tools\configure-claude-workshop-capture.ps1" -Action Restore
-```
-
-`Enable` 会先做时间戳备份；`Restore` 会恢复 workshop 前的配置。恢复前需要完全
-退出 Claude Desktop，恢复后重新打开。
-
-## 实测结论
-
-- 5 个英文词的 prompt 产生 57,365 字符 request body。
-- request 含 3 个 system segments、27 个 tool schemas、2 条 messages。
-- 第一轮 usage：19,673 cache-read、374 input、4 output tokens。
-- 同会话第二轮 messages 变为 4；19,673 cache-read、397 cache-creation、
-  2 input、12 output tokens。
-- 要求“两名 subagents”后，输出按 A/B 排版，但 telemetry 只有一个主线程
-  request、零 tool calls。文字中的角色标签不能证明发生了 subagent fan-out。
-
-## 目录
-
-- `app/page.tsx`：内容、workshop 步骤、视频与解析器
-- `app/globals.css`：网站视觉与响应式布局
-- `public/screenshots/`：本次实操截图
-- `public/data/`：脱敏流量样例
+本项目仍保留原有 Sites 发布配置，方便未来同步更新线上版本；本地运行不依赖线上部署。

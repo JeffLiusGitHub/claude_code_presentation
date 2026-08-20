@@ -1465,6 +1465,246 @@ footer > a {
   white-space: nowrap;
 }
 
+/* Agent Context Lab readability pass: use the generous layout at presentation distance. */
+.brand {
+  font-size: 15px;
+}
+
+.top-nav > div {
+  gap: 22px;
+}
+
+.top-nav > div a {
+  font-size: 13px;
+}
+
+.mono-label,
+.section-title > span {
+  font-size: 14px;
+}
+
+.primary-button,
+.secondary-button {
+  font-size: 18px;
+}
+
+.hero-proof > span {
+  font-size: 13px;
+}
+
+.hero-proof p {
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.proof-grid span {
+  font-size: 14px;
+}
+
+.proof-grid b {
+  font-size: 25px;
+}
+
+.thesis-strip span {
+  font-size: 12px;
+}
+
+.thesis-strip b {
+  font-size: 22px;
+  line-height: 1.25;
+}
+
+.section-title h2 {
+  font-size: clamp(48px, 6.4vw, 88px);
+}
+
+.loop-center span {
+  font-size: 14px;
+}
+
+.loop-center strong {
+  font-size: 39px;
+}
+
+.loop-center small,
+.orbit {
+  font-size: 16px;
+}
+
+.number-tag {
+  font-size: 13px;
+}
+
+.concept-copy h3,
+.tool-card h3 {
+  font-size: 34px;
+}
+
+.concept-copy p,
+.tool-card p {
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+.cost-grid article > b {
+  font-size: 14px;
+}
+
+.cost-grid h3 {
+  font-size: 29px;
+}
+
+.cost-grid p,
+.growth-copy p {
+  font-size: 19px;
+  line-height: 1.6;
+}
+
+.growth-row > b,
+.growth-legend {
+  font-size: 13px;
+}
+
+.growth-row i {
+  font-size: 12px;
+}
+
+.section-intro {
+  max-width: 980px;
+  font-size: 23px;
+}
+
+.slide-list h3 {
+  font-size: 27px;
+}
+
+.slide-list p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.talk-timing {
+  font-size: 14px;
+}
+
+.video-top,
+.video-card dt {
+  font-size: 12px;
+}
+
+.video-card h3 {
+  font-size: 33px;
+}
+
+.video-card > small,
+.video-card dd {
+  font-size: 17px;
+}
+
+.video-card > strong {
+  font-size: 15px;
+}
+
+.tool-card li,
+.privacy-callout,
+.workshop-intro span,
+.when-grid li,
+.finding-banner {
+  font-size: 18px;
+}
+
+.capture-facts span,
+.command-strip span {
+  font-size: 13px;
+}
+
+.command-strip code {
+  font-size: 17px;
+}
+
+.command-strip small {
+  font-size: 15px;
+}
+
+.step-meta,
+.step-card dt {
+  font-size: 12px;
+}
+
+.step-card dd {
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.step-card figcaption {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.primary-agent span,
+.return-line {
+  font-size: 13px;
+}
+
+.primary-agent b,
+.child-agents b {
+  font-size: 20px;
+}
+
+.child-agents small {
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+.when-grid h3 {
+  font-size: 30px;
+}
+
+.analyzer-copy p {
+  font-size: 21px;
+}
+
+.regex-box code {
+  font-size: 14px;
+}
+
+.drop-zone > small {
+  font-size: 16px;
+}
+
+.sample-button {
+  font-size: 12px;
+}
+
+.chip {
+  font-size: 11px;
+}
+
+.legend {
+  font-size: 14px;
+}
+
+.bar-label small,
+.anatomy-row > div:first-child span {
+  font-size: 14px;
+}
+
+.metric-grid span {
+  font-size: 12px;
+}
+
+.metric-grid b {
+  font-size: 19px;
+}
+
+.chart-note {
+  font-size: 15px;
+}
+
+.question-grid p {
+  font-size: 22px;
+}
+
 @media (max-width: 1050px) {
   .hero {
     grid-template-columns: 1fr;

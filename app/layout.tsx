@@ -12,12 +12,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const title = "What Happens After You Press Send in Claude Code?";
+const title = "Agent Context Lab · Claude 流量 Workshop";
 const description =
-  "An interactive, full-screen anatomy of a Claude Code request — from model and harness to tools, cache, memory and subagents.";
+  "用真实 Claude Desktop 流量理解 Model、Harness、Context、Tokens 与 Subagents。";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://agent-context-proxyman-guide.jeffliujeffliu.chatgpt.site"),
+  metadataBase: new URL(
+    process.env.DEPLOY_PRIME_URL ??
+      process.env.URL ??
+      "https://agent-context-proxyman-guide.jeffliujeffliu.chatgpt.site",
+  ),
   title,
   description,
   icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
@@ -31,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh-CN">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

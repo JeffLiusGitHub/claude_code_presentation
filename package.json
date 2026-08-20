@@ -1,5 +1,5 @@
 {
-  "name": "site-creator-vinext-starter",
+  "name": "claude-code-request-anatomy",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "vinext dev --force",
+    "local": "vinext dev --force",
     "build": "vinext build",
     "start": "vinext start",
     "test": "npm run build && node --test tests/rendered-html.test.mjs",
