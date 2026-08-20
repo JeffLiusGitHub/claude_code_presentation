@@ -45,7 +45,7 @@ export default function ProxymanGuide() {
           <a href="#certificate">CA</a>
           <a href="#first-capture">第一次抓包</a>
           <a href="#troubleshooting">排错</a>
-          <a className="pmg-back" href="/">返回 Workshop</a>
+          <a className="pmg-back" href="/">返回演示</a>
         </div>
       </nav>
 
