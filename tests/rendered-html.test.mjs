@@ -345,7 +345,13 @@ test("keeps the deck interactive, accessible, and the evidence sanitized", async
   assert.match(page, /\[sanitized\]/i);
   assert.match(styles, /scroll-snap-type:\s*y mandatory/);
   assert.match(styles, /min-height:\s*100svh/);
-  assert.match(styles, /Presentation-distance readability/);
+  assert.match(styles, /16:9 projection scale/);
+  assert.match(styles, /Large 16:9 canvas/);
+  assert.match(styles, /@media \(min-width: 1400px\) and \(min-height: 800px\) and \(min-aspect-ratio: 16 \/ 10\)/);
+  assert.match(styles, /width:\s*min\(1780px, calc\(100% - 7vw\)\)/);
+  assert.match(styles, /\.loopDiagram\s*\{[^}]*min-height:\s*clamp\(400px, 46vh, 500px\)/);
+  assert.match(styles, /\.transportStage,[\s\S]*?min-height:\s*clamp\(370px, 40vh, 460px\)/);
+  assert.match(styles, /\.mainAgent\s*\{[^}]*width:\s*min\(100%, 420px\)[^}]*aspect-ratio:\s*1/);
   assert.match(styles, /\.shell:fullscreen/);
   assert.match(styles, /\.fullscreenGlyph/);
   assert.match(styles, /\.fullscreenActive/);

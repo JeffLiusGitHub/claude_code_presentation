@@ -526,8 +526,111 @@
 .finalFlow { font-family: var(--text); font-size: clamp(17px, 2.4vh, 26px); font-weight: 400; }
 
 @media (min-width: 1200px) and (min-aspect-ratio: 16 / 10) {
-  .slideContent { padding-top: clamp(82px, 8.3vh, 104px); padding-bottom: clamp(48px, 4.8vh, 64px); }
+  .slideContent {
+    width: min(1780px, calc(100% - 7vw));
+    padding-top: clamp(76px, 7.6vh, 98px);
+    padding-bottom: clamp(42px, 4.2vh, 58px);
+  }
   .contextExperience { margin-top: clamp(26px, 3vh, 38px); }
+}
+
+/* Large 16:9 canvas: use the full projector frame instead of clustering content at the top. */
+@media (min-width: 1400px) and (min-height: 800px) and (min-aspect-ratio: 16 / 10) {
+  .hero h1 {
+    max-width: 1360px;
+    font-size: clamp(92px, min(16vh, 8.8vw), 168px);
+  }
+  .heroOrb { top: 5%; right: -3vw; width: clamp(460px, 42vw, 760px); }
+  .subtitle { font-size: clamp(29px, 3.1vh, 36px); }
+  .sendButton { min-width: 310px; margin-top: clamp(38px, 4.6vh, 56px); padding: 20px 22px 20px 26px; }
+  .signal { right: 6vw; bottom: 7vh; }
+
+  .dualSlide h2,
+  .loopSlide h2,
+  .contextSlide h2,
+  .toolSlide h2,
+  .transportSlide h2,
+  .cacheSlide h2,
+  .orderSlide h2,
+  .memorySlide h2,
+  .subagentSlide h2 {
+    font-size: clamp(76px, min(11.5vh, 6.8vw), 124px);
+  }
+  .eyebrow { margin-bottom: 20px; font-size: clamp(17px, 1.1vw, 21px); }
+
+  .dualStage { margin-top: clamp(36px, 4.5vh, 54px); }
+  .modelPanel,
+  .harnessPanel { min-height: clamp(340px, 40vh, 440px); padding: clamp(36px, 3.2vw, 56px); }
+  .modelPanel h3,
+  .harnessPanel h3 { font-size: clamp(42px, 3.3vw, 62px); }
+  .focusNote { max-width: 1040px; margin-top: 30px; }
+
+  .loopExperience { margin-top: clamp(30px, 4vh, 48px); }
+  .loopDiagram { min-height: clamp(400px, 46vh, 500px); }
+  .loopNode { width: clamp(210px, 16vw, 280px); padding: 30px; }
+  .loopNode b { font-size: clamp(31px, 2.5vw, 44px); }
+  .tracePanel { padding: clamp(34px, 3vw, 48px); }
+  .tracePanel li { padding: 19px 0; }
+
+  .contextExperience {
+    grid-template-columns: minmax(480px, .8fr) minmax(580px, 1.2fr);
+    gap: clamp(42px, 5vw, 92px);
+    margin-top: clamp(28px, 3.5vh, 42px);
+  }
+  .contextStack button { min-height: clamp(108px, 11vh, 126px); padding: 24px 28px; }
+  .contextCode pre { min-height: clamp(315px, 35vh, 385px); padding: clamp(30px, 2.8vw, 44px); }
+  .contextCode > p { padding: 21px 28px; }
+
+  .toolExperience { margin-top: clamp(30px, 4vh, 48px); }
+  .toolStep { min-height: clamp(86px, 9.5vh, 108px); }
+  .toolEvidence { min-height: clamp(390px, 44vh, 480px); padding: clamp(38px, 3.5vw, 58px); }
+  .toolEvidence > strong { margin-top: 52px; }
+  .messageGrowth { height: 34px; margin-top: 42px; }
+
+  .transportTabs { margin-top: clamp(28px, 3.6vh, 44px); }
+  .transportTabs button { min-height: clamp(68px, 7.5vh, 82px); padding-inline: 28px; }
+  .transportStage,
+  .streamViz,
+  .compactViz,
+  .stopViz { min-height: clamp(370px, 40vh, 460px); }
+  .streamOutput,
+  .eventRail { padding: clamp(42px, 4.5vw, 72px); }
+  .eventRail b { padding: 19px; }
+  .compactViz { padding: clamp(46px, 5vw, 82px); }
+
+  .cacheCompare { margin-top: clamp(32px, 4vh, 48px); }
+  .cacheRequest { min-height: clamp(220px, 25vh, 280px); padding: clamp(34px, 3vw, 48px); }
+  .stableBlock,
+  .dynamicBlock { padding: 16px 18px; }
+  .cacheMetrics > div { min-height: 88px; padding: 20px 28px; }
+
+  .orderStage { min-height: clamp(300px, 35vh, 380px); margin-top: clamp(42px, 6vh, 72px); }
+  .orderSequence { min-height: clamp(220px, 27vh, 290px); }
+  .orderSequence div { padding: 22px 16px; }
+  .prefixMeasure { height: clamp(280px, 34vh, 360px); }
+  .orderExplain { padding: clamp(34px, 3.5vw, 54px); }
+
+  .memoryTabs { margin-top: clamp(32px, 4.5vh, 54px); }
+  .memoryTabs button { min-height: clamp(88px, 10vh, 108px); padding: 18px 24px; }
+  .memoryStage { margin-top: 26px; padding: clamp(36px, 4vh, 56px); }
+  .memorySource,
+  .memoryRequest { min-height: clamp(230px, 27vh, 300px); padding: 32px; }
+
+  .agentFanout { margin-top: clamp(38px, 5vh, 60px); }
+  .mainAgent { width: min(100%, 420px); min-height: 0; aspect-ratio: 1; justify-self: center; }
+  .childAgents > div { min-height: clamp(82px, 9vh, 98px); padding: 20px 26px; }
+  .subagentEvidence > * { min-height: 78px; padding: 22px 26px; }
+
+  .finalSlide h2 { font-size: clamp(104px, min(23vh, 10vw), 190px); }
+  .finalBackdrop i:nth-child(1) { width: 44vw; }
+  .finalBackdrop i:nth-child(2) { width: 66vw; }
+  .finalBackdrop i:nth-child(3) { width: 88vw; }
+  .finalSystem { margin-top: clamp(42px, 6vh, 72px); }
+  .finalModel,
+  .finalHarness { padding: 25px 36px; }
+  .finalActions { margin-top: 42px; }
+  .finalActions a,
+  .finalActions button { padding: 18px 24px; }
 }
 
 @keyframes streamReveal { 0%,20%,100% { opacity: .22; } 35%,70% { opacity: 1; } }
