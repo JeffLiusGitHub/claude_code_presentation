@@ -67,6 +67,24 @@ const Step = ({
   </article>
 );
 
+const ActionGuide = ({
+  items,
+}: {
+  items: Array<{ label: string; content: React.ReactNode }>;
+}) => (
+  <ol className="pmg-action-guide">
+    {items.map((item, index) => (
+      <li key={`${item.label}-${index}`}>
+        <span>{String(index + 1).padStart(2, "0")}</span>
+        <div>
+          <b>{item.label}</b>
+          <p>{item.content}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+);
+
 export default function ProxymanGuide() {
   return (
     <main className="pmg-page">
@@ -191,8 +209,22 @@ export default function ProxymanGuide() {
                 In Proxyman, open the proxy setup view. The workshop capture shows
                 <b> 127.0.0.1:9090</b> and the Windows proxy override enabled.
               </p>
-              <strong>Success looks like:</strong>
-              <p>Proxyman reports that it is listening and new application traffic appears in the left-hand list.</p>
+              <ActionGuide
+                items={[
+                  {
+                    label: "WHERE TO LOOK",
+                    content: <>Find the green status pill in the centre of Proxyman&apos;s top bar.</>,
+                  },
+                  {
+                    label: "WHAT TO READ",
+                    content: <><code>Listening on 127.0.0.1:9090</code>, or your LAN address followed by <code>:9090</code>.</>,
+                  },
+                  {
+                    label: "SUCCESS CHECK",
+                    content: <>The bottom-right status reads <b>Proxy Overridden</b>, and the <b>Domains</b> count on the left starts increasing. If it stays empty, open <b>Setup</b> and re-enable the system proxy override.</>,
+                  },
+                ]}
+              />
             </div>
             <Evidence
               src="/proxyman-evidence/05-proxyman-listening-9090.jpg"
@@ -209,8 +241,22 @@ export default function ProxymanGuide() {
                 Open <code>Certificate → Install Certificate on this Windows</code>, then
                 choose <b>Install &amp; Trust</b>. Confirm the Windows certificate prompt.
               </p>
-              <strong>Success looks like:</strong>
-              <p>The Proxyman certificate panel reads <b>Installed &amp; Trusted</b>.</p>
+              <ActionGuide
+                items={[
+                  {
+                    label: "WHERE TO CLICK",
+                    content: <>Use the top menu: <code>Certificate → Install Certificate on this Windows…</code></>,
+                  },
+                  {
+                    label: "WHAT TO CLICK",
+                    content: <>Choose <b>Install &amp; Trust</b>, then select <b>Yes</b> in the Windows permission prompt.</>,
+                  },
+                  {
+                    label: "SUCCESS CHECK",
+                    content: <>The setup panel shows <b>Installed &amp; Trusted</b> and <b>Proxyman Certificate is ready!</b></>,
+                  },
+                ]}
+              />
             </div>
             <Evidence
               src="/proxyman-evidence/06-certificate-installed-trusted.jpg"
@@ -227,8 +273,22 @@ export default function ProxymanGuide() {
                 Open the SSL Proxying list and add <code>api.anthropic.com</code>. Keep the
                 rule narrow so the exercise focuses on the Claude API exchange.
               </p>
-              <strong>Success looks like:</strong>
-              <p>The host is enabled in the list and new <code>POST /v1/messages</code> bodies are readable.</p>
+              <ActionGuide
+                items={[
+                  {
+                    label: "WHERE TO CLICK",
+                    content: <>Open <code>Tools → SSL Proxying List…</code>, tick <b>Enable SSL Proxying Tool</b>, select <b>Include List</b>, then click <b>+</b>.</>,
+                  },
+                  {
+                    label: "WHAT TO TYPE",
+                    content: <>Enter <code>api.anthropic.com</code> exactly—without <code>https://</code>, a path, or a wildcard—and keep the row checked.</>,
+                  },
+                  {
+                    label: "SUCCESS CHECK",
+                    content: <>The enabled host appears in the Include List. If it already appears under <b>Domains</b> on the left, you can also right-click it and choose <b>Enable SSL Proxying</b>.</>,
+                  },
+                ]}
+              />
             </div>
             <Evidence
               src="/proxyman-evidence/07-ssl-proxying-api-anthropic.jpg"
@@ -257,6 +317,30 @@ export default function ProxymanGuide() {
             The task is intentionally read-only and portable. It asks for two visible tool
             calls and a short final answer, so the agent loop should span two API requests.
           </p>
+        </div>
+
+        <div className="pmg-task-runbook">
+          <div>
+            <span>FROM SETUP TO TRAFFIC</span>
+            <h3>Run it once, with Proxyman recording</h3>
+            <p>Keep both apps open. Start the capture before sending the prompt so the complete two-request loop appears in one time window.</p>
+          </div>
+          <ActionGuide
+            items={[
+              {
+                label: "WHERE TO TYPE",
+                content: <>Open a new Claude task and click its message composer. Leave Proxyman running in the background.</>,
+              },
+              {
+                label: "WHAT TO TYPE",
+                content: <>Paste the entire <b>Task Prompt</b> below unchanged. Keep the marker <code>TRAFFIC-DEMO-01-FRESH</code>; it ties the task to the captured request.</>,
+              },
+              {
+                label: "WHEN TO RETURN",
+                content: <>Press <b>Send</b> once. Return to Proxyman after Claude shows <b>Bash</b>, <b>Glob</b>, and the final one-sentence answer.</>,
+              },
+            ]}
+          />
         </div>
 
         <div className="pmg-prompt-card">
@@ -298,6 +382,30 @@ export default function ProxymanGuide() {
           </p>
         </div>
 
+        <div className="pmg-search-panel">
+          <div>
+            <span>FIND YOUR CAPTURE</span>
+            <h3>Reduce the list to the two message requests</h3>
+            <p>The IDs in this recording are #202 and #214. Your IDs will be different; use the host, path, method, and task time instead.</p>
+          </div>
+          <ActionGuide
+            items={[
+              {
+                label: "FILTER THE HOST",
+                content: <>In the left <b>Domains</b> panel, click <code>api.anthropic.com</code>. If needed, click <b>Filter (Ctrl+F)</b> at bottom-left and set <code>URL · Contains · api.anthropic.com/v1/messages</code>.</>,
+              },
+              {
+                label: "CHOOSE THE PAIR",
+                content: <>Select the two <code>POST /v1/messages?beta=true</code> rows created when you sent the task. Ignore the smaller <code>/count_tokens</code> rows.</>,
+              },
+              {
+                label: "OPEN THE CONTENT",
+                content: <>For the first row, inspect <code>Response → Body</code>. For the next row, inspect both <code>Request → Body</code> and <code>Response → Body</code>.</>,
+              },
+            ]}
+          />
+        </div>
+
         <div className="pmg-trace-flow" aria-label="Two-request agent loop">
           <div><span>REQUEST #202</span><b>Prompt + tools</b><small>response: tool_use</small></div>
           <i>→</i>
@@ -308,12 +416,28 @@ export default function ProxymanGuide() {
 
         <article className="pmg-trace-card">
           <div className="pmg-trace-copy">
-            <span>REQUEST #202 · POST /v1/messages?beta=true</span>
+            <span>FIRST MATCH · RECORDING #202 · POST /v1/messages?beta=true</span>
             <h3>Claude asks for Bash and Glob</h3>
             <p>
               The streaming response contains two <code>tool_use</code> blocks. This proves
               the model requested tool actions; it did not execute them inside the model.
             </p>
+            <ActionGuide
+              items={[
+                {
+                  label: "SEARCH RESPONSE BODY",
+                  content: <>Click inside <code>Response → Body</code>, press <code>Ctrl+F</code>, and type <code>tool_use</code>. You should find two tool blocks named <code>Bash</code> and <code>Glob</code>.</>,
+                },
+                {
+                  label: "SEARCH THE PAUSE",
+                  content: <>Replace the search with <code>stop_reason</code>. The nearby value should be <code>tool_use</code>, meaning the harness must run the tools.</>,
+                },
+                {
+                  label: "SEARCH CACHE USAGE",
+                  content: <>Search for <code>cache_creation_input_tokens</code>, then <code>cache_read_input_tokens</code>, to locate the cache counts at the end of the stream.</>,
+                },
+              ]}
+            />
             <dl>
               <dt>Response end state</dt><dd><code>stop_reason: tool_use</code></dd>
               <dt>Cache creation</dt><dd>11,858 input tokens</dd>
@@ -337,12 +461,28 @@ export default function ProxymanGuide() {
 
         <article className="pmg-trace-card pmg-trace-card-final">
           <div className="pmg-trace-copy">
-            <span>REQUEST #214 · POST /v1/messages?beta=true</span>
+            <span>SECOND MATCH · RECORDING #214 · POST /v1/messages?beta=true</span>
             <h3>The harness returns both results</h3>
             <p>
               The next request contains the Bash and Glob <code>tool_result</code> blocks.
               Claude uses that new observation to write the visible summary.
             </p>
+            <ActionGuide
+              items={[
+                {
+                  label: "SEARCH REQUEST BODY",
+                  content: <>Click inside <code>Request → Body</code>, press <code>Ctrl+F</code>, and type <code>tool_result</code>. Expect two matches—one result for each tool request.</>,
+                },
+                {
+                  label: "SEARCH RESPONSE BODY",
+                  content: <>Move to <code>Response → Body</code> and search for <code>end_turn</code>. This is the completion signal for the agent loop.</>,
+                },
+                {
+                  label: "CROSS-CHECK CLAUDE",
+                  content: <>The response text beside <code>end_turn</code> should match the final sentence visible in Claude.</>,
+                },
+              ]}
+            />
             <dl>
               <dt>Request payload</dt><dd><code>tool_result × 2</code></dd>
               <dt>Response end state</dt><dd><code>stop_reason: end_turn</code></dd>
